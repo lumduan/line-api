@@ -54,10 +54,10 @@ from line_api import LineAPIConfig, LineMessagingClient, TextMessage
 async def send_message():
     # Load configuration
     config = LineAPIConfig.from_env_file()
-    
+
     # Create message
     message = TextMessage.create("Hello from LINE API! 🚀")
-    
+
     # Send push message
     async with LineMessagingClient(config) as client:
         success = await client.push_message("USER_ID_HERE", [message])

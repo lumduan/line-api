@@ -8,8 +8,17 @@ from typing import Any
 
 import httpx
 
-from line_api.core import LineAPIConfig, LineMessageError, LineRateLimitError, LineTimeoutError
-from line_api.messaging.models import MulticastMessageRequest, PushMessageRequest, ReplyMessageRequest
+from line_api.core import (
+    LineAPIConfig,
+    LineMessageError,
+    LineRateLimitError,
+    LineTimeoutError,
+)
+from line_api.messaging.models import (
+    MulticastMessageRequest,
+    PushMessageRequest,
+    ReplyMessageRequest,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -150,7 +159,9 @@ class LineMessagingClient:
                         )
                     await asyncio.sleep(delay)
                     continue
-                raise LineTimeoutError(f"Request timeout after {self.config.max_retries} retries") from e
+                raise LineTimeoutError(
+                    f"Request timeout after {self.config.max_retries} retries"
+                ) from e
 
             except httpx.RequestError as e:
                 if attempt < self.config.max_retries:
@@ -258,7 +269,9 @@ class LineMessagingClient:
         )
 
         if self.config.debug:
-            logger.info("Multicast message sent successfully to %d users", len(user_ids))
+            logger.info(
+                "Multicast message sent successfully to %d users", len(user_ids)
+            )
 
         return True
 
