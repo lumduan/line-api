@@ -1,5 +1,5 @@
 """
-LINE API Integration Library.
+LineKit - LINE API Integration Library.
 
 A comprehensive, type-safe Python library for integrating with LINE's APIs.
 """

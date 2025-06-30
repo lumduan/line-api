@@ -1,4 +1,4 @@
-# LINE API Integration Library
+# LineKit - LINE API Integration Library
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -26,10 +26,10 @@ A comprehensive, type-safe Python library for integrating with LINE's APIs. Buil
 
 ```bash
 # Using pip
-pip install line-api-integration
+pip install linekit
 
 # Using uv
-uv pip install line-api-integration
+uv pip install linekit
 ```
 
 ## ⚡ Quick Start

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "line-api-integration"
+name = "linekit"
 version = "1.0.0"
 description = "Comprehensive LINE API integration library with Flex Messages, Rich Menus, LINE Login, LIFF, and Mini Apps"
 readme = "README.md"
