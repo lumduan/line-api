@@ -183,7 +183,7 @@ case $choice in
                 echo ""
                 echo "Users can install it with:"
                 echo "pip install ${package_name}"
-                
+
                 # Ask about creating a git tag
                 echo ""
                 read -p "Create a git tag for this release? (y/N): " tag_confirm

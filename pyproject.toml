@@ -57,11 +57,11 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-username/line-api-integration"
-Documentation = "https://github.com/your-username/line-api-integration/blob/main/README.md"
-Changelog = "https://github.com/your-username/line-api-integration/blob/main/CHANGELOG.md"
-Issues = "https://github.com/your-username/line-api-integration/issues"
-Repository = "https://github.com/your-username/line-api-integration"
+Homepage = "https://github.com/lumduan/line-api"
+Documentation = "https://github.com/lumduan/line-api/blob/main/README.md"
+Changelog = "https://github.com/lumduan/line-api/blob/main/CHANGELOG.md"
+Issues = "https://github.com/lumduan/line-api/issues"
+Repository = "https://github.com/lumduan/line-api"
 
 [tool.hatch.build.targets.wheel]
 packages = ["line_api"]
