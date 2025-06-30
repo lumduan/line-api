@@ -151,16 +151,31 @@ LINE_API_MAX_RETRIES=3
 
 **Key Features**:
 
-- Complete Flex Message component support
-- Type-safe builders with validation
-- Template system for common patterns
+- Complete Flex Message component support (FlexBox, FlexBubble, FlexText, etc.)
+- Type-safe creation with Pydantic validation
 - JSON export for LINE simulator testing
-- Custom component creation
+- Automatic clipboard copy functionality
+- No deprecated components (FlexSpacer removed)
+- Custom component creation with factory methods
 
 **Usage**:
 
+```python
+from line_api.flex_messages import (
+    FlexBox, FlexBubble, FlexLayout, FlexMessage, FlexText,
+    print_flex_json, export_flex_json
+)
 
+# Create components
+title = FlexText.create("Welcome!", weight="bold", size="xl")
+body = FlexBox.create(layout=FlexLayout.VERTICAL, contents=[title])
+bubble = FlexBubble.create(body=body)
+message = FlexMessage.create(alt_text="Welcome", contents=bubble)
 
+# Export for testing
+print_flex_json(message, "My Message")  # Auto-copies to clipboard
+export_flex_json(message, "welcome.json")  # Save to file
+```
 ### 4. Rich Menu Management (`rich_menu/`)
 
 **Purpose**: Complete Rich Menu lifecycle management
@@ -263,6 +278,12 @@ When working with this project:
    - Implement proper rate limiting
    - Cache responses when appropriate
    - Monitor memory usage for large operations
+9. **Flex Messages Specific**:
+   - Use factory methods (.create()) for all components
+   - Never use deprecated FlexSpacer (removed from LINE spec)
+   - Always provide alt_text for FlexMessage
+   - Use print_flex_json() for testing with auto-clipboard
+   - Validate JSON output in LINE Flex Message Simulator
 
 ### Development Guidelines
 

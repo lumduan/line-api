@@ -10,6 +10,9 @@ A comprehensive, type-safe Python library for integrating with LINE's APIs. Buil
 
 - 🚀 **Push Messages**: Send messages directly to users
 - 📱 **Multiple Message Types**: Text, images, locations, stickers, and Flex messages
+- 🎨 **Flex Messages**: Type-safe Flex Message creation with Pydantic models
+- 📋 **JSON Export**: Export Flex Messages for LINE simulator testing
+- 📋 **Clipboard Integration**: Automatic clipboard copy for testing
 - 🔒 **Type Safety**: Full Pydantic integration with comprehensive type hints
 - ⚡ **Async-First**: Built for high-performance async/await operations
 - 🛡️ **Error Handling**: Comprehensive error handling with typed exceptions
@@ -68,6 +71,58 @@ async def send_message():
 asyncio.run(send_message())
 ```
 
+### 3. Create Flex Messages
+
+```python
+from line_api import (
+    FlexBox,
+    FlexBubble,
+    FlexLayout,
+    FlexMessage,
+    FlexText,
+    print_flex_json,
+)
+
+# Create a simple flex message
+def create_welcome_message():
+    # Create text components
+    title = FlexText.create(
+        text="🎉 Welcome!",
+        weight="bold",
+        size="xl",
+        color="#1E3A8A",
+    )
+    
+    subtitle = FlexText.create(
+        text="Thank you for using our LINE API Integration Library!",
+        wrap=True,
+        color="#555555",
+    )
+    
+    # Create a vertical box layout
+    body = FlexBox.create(
+        layout=FlexLayout.VERTICAL,
+        contents=[title, subtitle],
+        spacing="md",
+        padding_all="20px",
+    )
+    
+    # Create bubble
+    bubble = FlexBubble.create(body=body)
+    
+    # Create flex message
+    return FlexMessage.create(
+        alt_text="Welcome Message",
+        contents=bubble,
+    )
+
+# Create and export to JSON for testing
+message = create_welcome_message()
+print_flex_json(message, "Welcome Message")
+# JSON is automatically copied to clipboard!
+# Paste it into https://developers.line.biz/flex-simulator/
+```
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please read our [contributing guidelines](CONTRIBUTING.md) to get started.
@@ -78,22 +133,26 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### ✅ What's Working
 
-- ✅ Basic project structure
+- ✅ Core configuration management with Pydantic
+- ✅ LINE Messaging API integration
+- ✅ Text message support with type safety
+- ✅ **Flex Messages**: Complete type-safe Flex Message creation
+- ✅ **JSON Export**: Export to LINE Flex Message Simulator
+- ✅ **Clipboard Integration**: Automatic copy-to-clipboard functionality
 - ✅ Modern Python packaging with `pyproject.toml`
 - ✅ Development tools (ruff, mypy, pytest)
-- ✅ Clean `LineAPI` class foundation
-- ✅ Test framework setup
+- ✅ Comprehensive test framework
+- ✅ Async-first architecture
 
 ### 🚧 To Be Implemented
 
-The following modules will be implemented one by one:
+The following modules will be implemented:
 
-- **core/**: Configuration management and HTTP client
-- **messaging/**: LINE Messaging API integration
-- **flex_messages/**: Flex Message builder with type safety
 - **rich_menu/**: Rich Menu management
 - **login/**: LINE Login OAuth2 authentication
 - **liff/**: LIFF (LINE Front-end Framework) integration
+- **webhooks/**: Webhook signature verification
+- **advanced_messaging/**: Image, video, audio message types
 
 ## 📦 Installation
 
@@ -218,25 +277,26 @@ line-api/
 
 ### ✅ Completed
 
-- Basic project structure
-- Core HTTP client with async support
-- Initial test infrastructure
+- Core configuration management with Pydantic
+- LINE Messaging API with async support
+- Text message creation and sending
+- **Flex Messages**: Complete type-safe Flex Message creation
+- **JSON Export utilities**: Export to LINE Flex Message Simulator
+- **Clipboard integration**: Automatic copy functionality
+- Comprehensive test infrastructure
 - Development tooling setup
 
 ### 🔄 In Progress
 
-- Messaging API implementation
-- Request/response models
-- Error handling system
+- Advanced message types (images, videos, audio)
+- Webhook signature verification
+- Rate limiting enhancements
 
 ### 📅 Planned
 
-- Flex Message builders
 - Rich Menu management
 - LINE Login integration
-- LIFF SDK
-- Webhook signature verification
-- Rate limiting and retry mechanisms
+- LIFF SDK integration
 
 ## 🤝 How to Contribute
 

@@ -1,13 +1,40 @@
 ---
 description:
 globs:
-alwaysApply: true
+alwa2. **Code Style & Quali3. **Error4. **Testing Requirements**
+   - Write tests for all new functionality
+   - Use async testing patterns
+   - Mock external APIs appropriately
+   - Include integration tests for critical paths
+
+### Documentation
+
+1. **Code Documentation****
+   - Use typed exceptions for different scenarios
+   - Implement proper retry mechanisms
+   - Log errors with structured logging
+   - Provide helpful error messages
+
+4. **Testing Requirements**. **Python Standards**
+   - Use async/await for all I/O operations
+   - Full type hints throughout codebase
+   - Pydantic models for data validation
+   - Context managers for resource management
+
+2. **Flex Messages Standards**
+   - Use factory methods (.create()) for all components
+   - Never use deprecated FlexSpacer (removed from LINE spec)
+   - Always provide alt_text for FlexMessage
+   - Use print_flex_json() for testing with auto-clipboard
+   - Validate JSON output in LINE Flex Message Simulator
+
+3. **Error Handling**true
 ---
 # LINE API Integration Library - Project Rules
 
 ## Project Overview
 
-This is a comprehensive LINE API integration library built for production use, providing modern async/await patterns, full Pydantic type safety, and coverage for all major LINE platform features.
+This is a comprehensive LINE API integration library built for production use, providing modern async/await patterns, full Pydantic type safety, and coverage for all major LINE platform features including Messaging API, Flex Messages, Rich Menus, LINE Login, and LIFF.
 
 ## Core Development Rules
 
@@ -110,6 +137,35 @@ Each commit message must include:
    - Run `mypy` for type checking
    - Follow existing code style
    - Keep functions focused and small
+
+## Current Implementation Status
+
+### ✅ Completed Features
+
+1. **Core Module** (`line_api/core/`)
+   - Configuration management with Pydantic
+   - Environment variable loading
+   - Type-safe settings
+
+2. **Messaging API** (`line_api/messaging/`)
+   - Push message functionality
+   - Text message support
+   - Async HTTP client integration
+
+3. **Flex Messages** (`line_api/flex_messages/`)
+   - Complete Pydantic models for all Flex components
+   - Type-safe factory methods (.create())
+   - JSON export utilities with clipboard integration
+   - LINE Flex Message Simulator compatibility
+   - No deprecated components (FlexSpacer removed)
+
+### 🚧 Planned Features
+
+- Rich Menu management
+- LINE Login OAuth2 integration
+- LIFF (LINE Front-end Framework) support
+- Webhook signature verification
+- Advanced message types (images, videos, audio)
 
 ## Environment Setup
 
