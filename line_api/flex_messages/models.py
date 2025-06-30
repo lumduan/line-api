@@ -221,7 +221,7 @@ class FlexSeparator(FlexComponent):
 
     @classmethod
     def create(
-        cls, *, margin: Optional[str] = None, color: Optional[str] = None
+        cls, *, margin: Optional[str] = None, color: Optional[str] = None,
     ) -> "FlexSeparator":
         """Create a FlexSeparator component with the given parameters."""
         return cls(margin=margin, color=color)

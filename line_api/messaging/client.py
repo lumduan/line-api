@@ -160,7 +160,7 @@ class LineMessagingClient:
                     await asyncio.sleep(delay)
                     continue
                 raise LineTimeoutError(
-                    f"Request timeout after {self.config.max_retries} retries"
+                    f"Request timeout after {self.config.max_retries} retries",
                 ) from e
 
             except httpx.RequestError as e:
@@ -270,7 +270,7 @@ class LineMessagingClient:
 
         if self.config.debug:
             logger.info(
-                "Multicast message sent successfully to %d users", len(user_ids)
+                "Multicast message sent successfully to %d users", len(user_ids),
             )
 
         return True

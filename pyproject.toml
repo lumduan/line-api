@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "line-api-integration"
-version = "0.1.0"
+version = "1.0.0"
 description = "Comprehensive LINE API integration library with Flex Messages, Rich Menus, LINE Login, LIFF, and Mini Apps"
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -12,7 +12,7 @@ authors = [
     {name = "LINE API Integration Library", email = "b@candythink.com"},
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
@@ -57,10 +57,11 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/line-api-integration"
-Documentation = "https://line-api-integration.readthedocs.io/"
-Changelog = "https://github.com/yourusername/line-api-integration/blob/main/CHANGELOG.md"
-Issues = "https://github.com/yourusername/line-api-integration/issues"
+Homepage = "https://github.com/your-username/line-api-integration"
+Documentation = "https://github.com/your-username/line-api-integration/blob/main/README.md"
+Changelog = "https://github.com/your-username/line-api-integration/blob/main/CHANGELOG.md"
+Issues = "https://github.com/your-username/line-api-integration/issues"
+Repository = "https://github.com/your-username/line-api-integration"
 
 [tool.hatch.build.targets.wheel]
 packages = ["line_api"]
@@ -69,6 +70,8 @@ force-include = { "line_api/py.typed" = "line_api/py.typed" }
 [tool.ruff]
 target-version = "py39"
 line-length = 88
+
+[tool.ruff.lint]
 select = [
     "E", "F", "W",  # Default flake8
     "I",  # isort
@@ -92,13 +95,17 @@ ignore = [
     "E501",  # line too long, handled by black
     "B008",  # do not perform function calls in argument defaults
     "B904",  # Allow raising exceptions without from clauses
+    "N815",  # Allow mixedCase for API compatibility with LINE
+    "D401",  # Allow non-imperative mood for descriptive docstrings
 ]
-[tool.ruff.per-file-ignores]
+
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]  # Allow unused imports in __init__.py
 "tests/*" = ["S101"]      # Allow using assert in tests
 "tests/**/*" = ["B011"]   # Allow assert False in tests
+"**/models.py" = ["N815"] # Allow mixedCase in API models
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["line_api"]
 
 [tool.black]

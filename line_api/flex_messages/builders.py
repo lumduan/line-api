@@ -159,9 +159,9 @@ class BaseFlexBuilder:
         return FlexSeparator.create(margin=margin)
 
     @staticmethod
-    def create_spacer(size: str = "md") -> FlexSpacer:
-        """Create a spacer with specified size."""
-        return FlexSpacer.create(size)
+    def create_separator(margin: str = "md", color: str = "#E0E0E0") -> FlexSeparator:
+        """Create a separator with specified margin and color."""
+        return FlexSeparator.create(margin=margin, color=color)
 
 
 class FlexMessageBuilder:
@@ -189,7 +189,7 @@ class FlexMessageBuilder:
         """
         contents: list[FlexComponent] = [
             self.base.create_section_title(title),
-            FlexSpacer.create("md"),
+            self.base.create_separator(margin="md"),
             FlexText.create(
                 text=message,
                 wrap=True,
