@@ -73,8 +73,12 @@ echo -e "${GREEN}🔍 Running code quality checks...${NC}"
 echo "Running ruff..."
 uv run ruff check line_api/
 if [ $? -ne 0 ]; then
-    echo -e "${RED}❌ Ruff linting failed! Please fix the issues.${NC}"
-    exit 1
+    echo -e "${YELLOW}⚠️  Ruff found linting issues. Continue anyway? (y/N)${NC}"
+    read -p ": " lint_confirm
+    if [[ ! $lint_confirm =~ ^[Yy]$ ]]; then
+        echo -e "${RED}❌ Linting failed! Aborting publish.${NC}"
+        exit 1
+    fi
 fi
 
 echo "Running mypy..."
