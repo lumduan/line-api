@@ -68,18 +68,29 @@ line-api/
 ├── pyproject.toml                  # Dependencies and tool configurations
 ├── line-api.code-workspace         # VS Code workspace configuration
 ├── line_api/                       # Main package directory
-│           # LIFF app lifecycle management
+│   ├── core/                       # Core configuration and utilities
+│   ├── messaging/                  # LINE Messaging API implementation
+│   ├── webhook/                    # Webhook handling and event processing
+│   ├── flex_messages/              # Flex Message components and utilities
+│   ├── rich_menu/                  # Rich Menu management
+│   ├── login/                      # LINE Login OAuth2 integration
+│   └── liff/                       # LIFF app lifecycle management
 ├── tests/                          # 🧪 Comprehensive Test Suite
 │   ├── __init__.py
-│     # LIFF tests
+│   ├── test_messaging.py           # Messaging API tests
+│   ├── test_webhook.py             # Webhook processing tests
+│   ├── test_flex_messages.py       # Flex Messages tests
+│   └── ...                         # Additional test modules
 ├── examples/                       # 📚 Usage Examples
-│    # FastAPI webhook handler
+│   ├── webhook_example.py          # FastAPI webhook handler
+│   ├── flex_message_example.py     # Flex Message creation
+│   └── push_message_example.py     # Basic message sending
 ├── docs/                           # 📖 Documentation
 │   ├── api/                        # API reference documentation
 │   ├── guides/                     # Usage guides and tutorials
 │   └── examples/                   # Detailed examples
 ├── scripts/                        # 🔧 Development Scripts
-│   ├─       # API testing script
+│   └── ...                         # API testing script
 └── debug/                          # 🐛 Debug Scripts (gitignored)
     └── ...                         # Temporary debug and investigation scripts
 ```
@@ -143,25 +154,81 @@ LINE_API_MAX_RETRIES=3
 
 **Usage**:
 
+```python
+from line_api import LineMessagingClient, LineAPIConfig, TextMessage
+
+async with LineMessagingClient(LineAPIConfig()) as client:
+    await client.push_message("USER_ID", [TextMessage(text="Hello!")])
+```
+
+### 3. Webhook Processing (`webhook/`)
+
+**Purpose**: Complete webhook handling for LINE Platform events
+
+**Key Features**:
+
+- Type-safe webhook event models with Pydantic validation
+- Signature verification utilities for security
+- Flexible event handler system with decorators
+- Comprehensive error handling and logging
+- Support for all LINE webhook event types
+
+**Usage**:
+
+```python
+from line_api.webhook import LineWebhookHandler
+from fastapi import FastAPI, Request
+
+handler = LineWebhookHandler(config)
+
+@handler.message_handler
+async def handle_message(event: LineMessageEvent) -> None:
+    # Process message events
+    pass
+
+@app.post("/webhook")
+async def webhook(request: Request):
+    return await handler.handle_webhook(
+        await request.body(),
+        request.headers.get("X-Line-Signature"),
+        await request.json()
+    )
+```
 
 
-### 3. Flex Messages (`flex_messages/`)
+
+### 4. Flex Messages (`flex_messages/`)
 
 **Purpose**: Type-safe Flex Message creation with Pydantic models
 
 **Key Features**:
 
-- Complete Flex Message component support
-- Type-safe builders with validation
-- Template system for common patterns
+- Complete Flex Message component support (FlexBox, FlexBubble, FlexText, etc.)
+- Type-safe creation with Pydantic validation
 - JSON export for LINE simulator testing
-- Custom component creation
+- Automatic clipboard copy functionality
+- No deprecated components (FlexSpacer removed)
+- Custom component creation with factory methods
 
 **Usage**:
 
+```python
+from line_api.flex_messages import (
+    FlexBox, FlexBubble, FlexLayout, FlexMessage, FlexText,
+    print_flex_json, export_flex_json
+)
 
+# Create components
+title = FlexText.create("Welcome!", weight="bold", size="xl")
+body = FlexBox.create(layout=FlexLayout.VERTICAL, contents=[title])
+bubble = FlexBubble.create(body=body)
+message = FlexMessage.create(alt_text="Welcome", contents=bubble)
 
-### 4. Rich Menu Management (`rich_menu/`)
+# Export for testing
+print_flex_json(message, "My Message")  # Auto-copies to clipboard
+export_flex_json(message, "welcome.json")  # Save to file
+```
+### 5. Rich Menu Management (`rich_menu/`)
 
 **Purpose**: Complete Rich Menu lifecycle management
 
@@ -177,7 +244,7 @@ LINE_API_MAX_RETRIES=3
 
 
 
-### 5. LINE Login (`login/`)
+### 6. LINE Login (`login/`)
 
 **Purpose**: OAuth2 authentication and user management
 
@@ -193,7 +260,7 @@ LINE_API_MAX_RETRIES=3
 
 
 
-### 6. LIFF Management (`liff/`)
+### 7. LIFF Management (`liff/`)
 
 **Purpose**: LIFF (LINE Front-end Framework) app management
 
@@ -263,6 +330,19 @@ When working with this project:
    - Implement proper rate limiting
    - Cache responses when appropriate
    - Monitor memory usage for large operations
+9. **Flex Messages Specific**:
+   - Use factory methods (.create()) for all components
+   - Never use deprecated FlexSpacer (removed from LINE spec)
+   - Always provide alt_text for FlexMessage
+   - Use print_flex_json() for testing with auto-clipboard
+   - Validate JSON output in LINE Flex Message Simulator
+10. **Webhook Processing Specific**:
+   - Always verify LINE signatures for security
+   - Use decorator-based event handlers for clean code organization
+   - Handle all event types gracefully with proper error logging
+   - Implement duplicate event detection for reliability
+   - Use proper HTTP status codes (200 for success, 401 for invalid signature)
+   - Log all webhook events for debugging and monitoring
 
 ### Development Guidelines
 

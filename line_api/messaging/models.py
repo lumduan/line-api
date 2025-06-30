@@ -210,7 +210,7 @@ class MulticastMessageRequest(BaseModel):
 class ReplyMessageRequest(BaseModel):
     """Request model for reply message API."""
 
-    # Using camelCase to match LINE API specification  # noqa: N815
+    # Using camelCase to match LINE API specification
     replyToken: str = Field(..., description="Reply token from webhook event")  # noqa: N815
     messages: list[AnyMessage] = Field(
         ...,

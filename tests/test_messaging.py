@@ -1,7 +1,8 @@
 """Tests for LINE Messaging API client."""
 
-import pytest
 from unittest.mock import AsyncMock, patch
+
+import pytest
 
 from line_api.core import LineAPIConfig, LineMessageError
 from line_api.messaging import LineMessagingClient, TextMessage
@@ -34,15 +35,15 @@ def client(config: LineAPIConfig) -> LineMessagingClient:
 async def test_push_message_success(client: LineMessagingClient) -> None:
     """Test successful push message."""
     messages = [TextMessage.create("Hello, World!")]
-    
-    with patch.object(client, '_make_request', new=AsyncMock()) as mock_request:
+
+    with patch.object(client, "_make_request", new=AsyncMock()) as mock_request:
         mock_request.return_value = {}
-        
+
         result = await client.push_message("user123", messages)
-        
+
         assert result is True
         mock_request.assert_called_once()
-        
+
         # Verify the request data
         call_args = mock_request.call_args
         assert call_args[0] == ("POST", "message/push")
@@ -59,7 +60,7 @@ async def test_push_message_validation(client: LineMessagingClient) -> None:
     # Test empty messages
     with pytest.raises(LineMessageError, match="At least one message is required"):
         await client.push_message("user123", [])
-    
+
     # Test too many messages
     messages = [TextMessage.create(f"Message {i}") for i in range(6)]
     with pytest.raises(LineMessageError, match="Maximum 5 messages allowed"):
@@ -70,11 +71,11 @@ async def test_push_message_validation(client: LineMessagingClient) -> None:
 async def test_multicast_message_validation(client: LineMessagingClient) -> None:
     """Test multicast message validation."""
     messages = [TextMessage.create("Hello")]
-    
+
     # Test empty user IDs
     with pytest.raises(LineMessageError, match="At least one user ID is required"):
         await client.multicast_message([], messages)
-    
+
     # Test too many user IDs
     user_ids = [f"user{i}" for i in range(501)]
     with pytest.raises(LineMessageError, match="Maximum 500 recipients allowed"):
@@ -89,7 +90,7 @@ async def test_reply_message_validation(client: LineMessagingClient) -> None:
         await client.reply_message("reply_token", [])
 
 
-@pytest.mark.asyncio  
+@pytest.mark.asyncio
 async def test_client_context_manager(config: LineAPIConfig) -> None:
     """Test client as context manager."""
     async with LineMessagingClient(config) as client:
