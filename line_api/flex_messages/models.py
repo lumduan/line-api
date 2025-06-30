@@ -13,21 +13,21 @@ from pydantic import BaseModel, Field
 
 class FlexMessageType(str, Enum):
     """Flex message types."""
-    
+
     BUBBLE = "bubble"
     CAROUSEL = "carousel"
 
 
 class FlexPosition(str, Enum):
     """Flex position options."""
-    
+
     RELATIVE = "relative"
     ABSOLUTE = "absolute"
 
 
 class FlexAlignment(str, Enum):
     """Flex alignment options."""
-    
+
     START = "start"
     END = "end"
     CENTER = "center"
@@ -35,7 +35,7 @@ class FlexAlignment(str, Enum):
 
 class FlexLayout(str, Enum):
     """Flex container layouts."""
-    
+
     VERTICAL = "vertical"
     HORIZONTAL = "horizontal"
     BASELINE = "baseline"
@@ -43,7 +43,7 @@ class FlexLayout(str, Enum):
 
 class FlexButtonStyle(str, Enum):
     """Button styles."""
-    
+
     LINK = "link"
     PRIMARY = "primary"
     SECONDARY = "secondary"
@@ -51,15 +51,15 @@ class FlexButtonStyle(str, Enum):
 
 class FlexAction(BaseModel):
     """Base flex action."""
-    
+
     type: str
-    
+
     model_config = {"extra": "forbid"}
 
 
 class FlexPostbackAction(FlexAction):
     """Postback action."""
-    
+
     type: str = Field(default="postback", frozen=True)
     label: Optional[str] = None
     data: str
@@ -68,15 +68,15 @@ class FlexPostbackAction(FlexAction):
 
 class FlexMessageAction(FlexAction):
     """Message action."""
-    
+
     type: str = Field(default="message", frozen=True)
     label: Optional[str] = None
     text: str
-    
+
 
 class FlexUriAction(FlexAction):
     """URI action."""
-    
+
     type: str = Field(default="uri", frozen=True)
     label: Optional[str] = None
     uri: str
@@ -85,15 +85,15 @@ class FlexUriAction(FlexAction):
 
 class FlexComponent(BaseModel):
     """Base flex component."""
-    
+
     type: str
-    
+
     model_config = {"extra": "forbid"}
 
 
 class FlexText(FlexComponent):
     """Text component."""
-    
+
     type: str = Field(default="text", frozen=True)
     text: str
     size: Optional[str] = None
@@ -110,7 +110,7 @@ class FlexText(FlexComponent):
     offset_start: Optional[str] = Field(default=None, alias="offsetStart")
     offset_end: Optional[str] = Field(default=None, alias="offsetEnd")
     action: Optional[Union[FlexPostbackAction, FlexMessageAction, FlexUriAction]] = None
-    
+
     @classmethod
     def create(
         cls,
@@ -122,7 +122,9 @@ class FlexText(FlexComponent):
         align: Optional[str] = None,
         wrap: Optional[bool] = None,
         flex: Optional[int] = None,
-        action: Optional[Union[FlexPostbackAction, FlexMessageAction, FlexUriAction]] = None,
+        action: Optional[
+            Union[FlexPostbackAction, FlexMessageAction, FlexUriAction]
+        ] = None,
     ) -> "FlexText":
         """Create a FlexText component with the given parameters."""
         return cls(
@@ -139,13 +141,13 @@ class FlexText(FlexComponent):
 
 class FlexButton(FlexComponent):
     """Button component."""
-    
+
     type: str = Field(default="button", frozen=True)
     action: Union[FlexPostbackAction, FlexMessageAction, FlexUriAction]
     style: Optional[FlexButtonStyle] = None
     color: Optional[str] = None
     gravity: Optional[str] = None
-    
+
     @classmethod
     def create(
         cls,
@@ -166,7 +168,7 @@ class FlexButton(FlexComponent):
 
 class FlexImage(FlexComponent):
     """Image component."""
-    
+
     type: str = Field(default="image", frozen=True)
     url: str
     position: Optional[FlexPosition] = None
@@ -183,7 +185,7 @@ class FlexImage(FlexComponent):
     offset_start: Optional[str] = Field(default=None, alias="offsetStart")
     offset_end: Optional[str] = Field(default=None, alias="offsetEnd")
     action: Optional[Union[FlexPostbackAction, FlexMessageAction, FlexUriAction]] = None
-    
+
     @classmethod
     def create(
         cls,
@@ -194,7 +196,9 @@ class FlexImage(FlexComponent):
         aspect_mode: Optional[str] = None,
         gravity: Optional[str] = None,
         flex: Optional[int] = None,
-        action: Optional[Union[FlexPostbackAction, FlexMessageAction, FlexUriAction]] = None,
+        action: Optional[
+            Union[FlexPostbackAction, FlexMessageAction, FlexUriAction]
+        ] = None,
     ) -> "FlexImage":
         """Create a FlexImage component with the given parameters."""
         return cls(
@@ -210,20 +214,22 @@ class FlexImage(FlexComponent):
 
 class FlexSeparator(FlexComponent):
     """Separator component."""
-    
+
     type: str = Field(default="separator", frozen=True)
     margin: Optional[str] = None
     color: Optional[str] = None
-    
+
     @classmethod
-    def create(cls, *, margin: Optional[str] = None, color: Optional[str] = None) -> "FlexSeparator":
+    def create(
+        cls, *, margin: Optional[str] = None, color: Optional[str] = None
+    ) -> "FlexSeparator":
         """Create a FlexSeparator component with the given parameters."""
         return cls(margin=margin, color=color)
 
 
 class FlexBox(FlexComponent):
     """Box container component."""
-    
+
     type: str = Field(default="box", frozen=True)
     layout: FlexLayout
     contents: list[Union[FlexText, FlexButton, FlexImage, FlexSeparator, "FlexBox"]]
@@ -243,12 +249,14 @@ class FlexBox(FlexComponent):
     offset_bottom: Optional[str] = Field(default=None, alias="offsetBottom")
     offset_start: Optional[str] = Field(default=None, alias="offsetStart")
     offset_end: Optional[str] = Field(default=None, alias="offsetEnd")
-    
+
     @classmethod
     def create(
         cls,
         layout: FlexLayout,
-        contents: list[Union[FlexText, FlexButton, FlexImage, FlexSeparator, "FlexBox"]],
+        contents: list[
+            Union[FlexText, FlexButton, FlexImage, FlexSeparator, "FlexBox"]
+        ],
         *,
         flex: Optional[int] = None,
         spacing: Optional[str] = None,
@@ -270,7 +278,7 @@ class FlexBox(FlexComponent):
 
 class FlexBubble(BaseModel):
     """Flex bubble container."""
-    
+
     type: str = Field(default="bubble", frozen=True)
     size: Optional[str] = None
     direction: Optional[str] = None
@@ -279,7 +287,7 @@ class FlexBubble(BaseModel):
     body: Optional[FlexBox] = None
     footer: Optional[FlexBox] = None
     styles: Optional[dict[str, Any]] = None
-    
+
     @classmethod
     def create(
         cls,
@@ -304,10 +312,10 @@ class FlexBubble(BaseModel):
 
 class FlexCarousel(BaseModel):
     """Flex carousel container."""
-    
+
     type: str = Field(default="carousel", frozen=True)
     contents: list[FlexBubble]
-    
+
     @classmethod
     def create(cls, bubbles: list[FlexBubble]) -> "FlexCarousel":
         """Create a FlexCarousel with the given bubbles."""
@@ -316,11 +324,11 @@ class FlexCarousel(BaseModel):
 
 class FlexMessage(BaseModel):
     """Main flex message structure."""
-    
+
     type: str = Field(default="flex", frozen=True)
     alt_text: str = Field(alias="altText")
     contents: Union[FlexBubble, FlexCarousel]
-    
+
     @classmethod
     def create(
         cls,

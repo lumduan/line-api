@@ -11,7 +11,10 @@ A comprehensive, type-safe Python library for integrating with LINE's APIs. Buil
 - 🚀 **Push Messages**: Send messages directly to users
 - 📱 **Multiple Message Types**: Text, images, locations, stickers, and Flex messages
 - 🎨 **Flex Messages**: Type-safe Flex Message creation with Pydantic models
-- 📋 **JSON Export**: Export Flex Messages for LINE simulator testing
+- � **Webhook Handling**: Complete webhook integration with signature verification
+- 🎯 **Event Handlers**: Decorator-based event handling for messages, postbacks, follows
+- 🛡️ **Security**: LINE signature verification for webhook authenticity
+- �📋 **JSON Export**: Export Flex Messages for LINE simulator testing
 - 📋 **Clipboard Integration**: Automatic clipboard copy for testing
 - 🔒 **Type Safety**: Full Pydantic integration with comprehensive type hints
 - ⚡ **Async-First**: Built for high-performance async/await operations
@@ -92,13 +95,13 @@ def create_welcome_message():
         size="xl",
         color="#1E3A8A",
     )
-    
+
     subtitle = FlexText.create(
         text="Thank you for using our LINE API Integration Library!",
         wrap=True,
         color="#555555",
     )
-    
+
     # Create a vertical box layout
     body = FlexBox.create(
         layout=FlexLayout.VERTICAL,
@@ -106,10 +109,10 @@ def create_welcome_message():
         spacing="md",
         padding_all="20px",
     )
-    
+
     # Create bubble
     bubble = FlexBubble.create(body=body)
-    
+
     # Create flex message
     return FlexMessage.create(
         alt_text="Welcome Message",
@@ -121,6 +124,78 @@ message = create_welcome_message()
 print_flex_json(message, "Welcome Message")
 # JSON is automatically copied to clipboard!
 # Paste it into https://developers.line.biz/flex-simulator/
+```
+
+### 4. Handle LINE Webhooks
+
+```python
+from fastapi import FastAPI, Request
+from line_api import (
+    LineAPIConfig,
+    LineWebhookHandler,
+    LineMessagingClient,
+    LineMessageEvent,
+    TextMessage,
+)
+
+app = FastAPI()
+
+# Initialize components
+config = LineAPIConfig()
+webhook_handler = LineWebhookHandler(config)
+messaging_client = LineMessagingClient(config)
+
+# Register event handlers using decorators
+@webhook_handler.message_handler
+async def handle_message(event: LineMessageEvent) -> None:
+    """Handle incoming text messages."""
+    if event.message.type == "text":
+        user_text = event.message.text
+
+        # Create smart responses
+        if user_text.lower() in ["hello", "hi", "hey"]:
+            response = "Hello! How can I help you today?"
+        elif user_text.lower() == "help":
+            response = "Available commands: hello, help, status"
+        else:
+            response = f"You said: {user_text}"
+
+        # Reply to user
+        if event.replyToken:
+            await messaging_client.reply_message(
+                reply_token=event.replyToken,
+                messages=[TextMessage(text=response)]
+            )
+
+@webhook_handler.follow_handler
+async def handle_follow(event) -> None:
+    """Welcome new followers."""
+    welcome_msg = "🎉 Welcome! Thanks for adding me as a friend!"
+    reply_token = getattr(event, "replyToken", None)
+    if reply_token:
+        await messaging_client.reply_message(
+            reply_token=reply_token,
+            messages=[TextMessage(text=welcome_msg)]
+        )
+
+# FastAPI webhook endpoint
+@app.post("/webhook")
+async def webhook_endpoint(request: Request):
+    """Receive webhooks from LINE Platform."""
+    body = await request.body()
+    signature = request.headers.get("X-Line-Signature")
+    payload_dict = await request.json()
+
+    # Process webhook with automatic signature verification
+    response = await webhook_handler.handle_webhook(
+        request_body=body,
+        signature=signature,
+        payload_dict=payload_dict
+    )
+
+    return response.model_dump()
+
+# Run with: uvicorn your_app:app --host 0.0.0.0 --port 8000
 ```
 
 ## 🤝 Contributing
@@ -139,6 +214,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - ✅ **Flex Messages**: Complete type-safe Flex Message creation
 - ✅ **JSON Export**: Export to LINE Flex Message Simulator
 - ✅ **Clipboard Integration**: Automatic copy-to-clipboard functionality
+- ✅ **Webhook Handling**: Complete webhook integration with FastAPI
+- ✅ **Event Processing**: Message, postback, follow/unfollow event handling
+- ✅ **Signature Verification**: LINE webhook signature verification for security
+- ✅ **Type-Safe Events**: Pydantic models for all LINE webhook event types
 - ✅ Modern Python packaging with `pyproject.toml`
 - ✅ Development tools (ruff, mypy, pytest)
 - ✅ Comprehensive test framework
@@ -151,7 +230,6 @@ The following modules will be implemented:
 - **rich_menu/**: Rich Menu management
 - **login/**: LINE Login OAuth2 authentication
 - **liff/**: LIFF (LINE Front-end Framework) integration
-- **webhooks/**: Webhook signature verification
 - **advanced_messaging/**: Image, video, audio message types
 
 ## 📦 Installation
@@ -283,13 +361,16 @@ line-api/
 - **Flex Messages**: Complete type-safe Flex Message creation
 - **JSON Export utilities**: Export to LINE Flex Message Simulator
 - **Clipboard integration**: Automatic copy functionality
+- **Webhook Integration**: Complete webhook handling with FastAPI
+- **Event Processing**: Message, postback, follow/unfollow events
+- **Signature Verification**: LINE webhook signature verification
+- **Type-Safe Models**: Pydantic models for all LINE event types
 - Comprehensive test infrastructure
 - Development tooling setup
 
 ### 🔄 In Progress
 
 - Advanced message types (images, videos, audio)
-- Webhook signature verification
 - Rate limiting enhancements
 
 ### 📅 Planned

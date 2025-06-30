@@ -28,7 +28,16 @@ alwa2. **Code Style & Quali3. **Error4. **Testing Requirements**
    - Use print_flex_json() for testing with auto-clipboard
    - Validate JSON output in LINE Flex Message Simulator
 
-3. **Error Handling**true
+3. **Webhook Processing Standards**
+   - Always verify LINE signatures for security
+   - Use decorator-based event handlers (@handler.message_handler, etc.)
+   - Handle all event types gracefully with proper error logging
+   - Implement duplicate event detection for reliability
+   - Use proper HTTP status codes (200 for success, 401 for invalid signature)
+   - Log all webhook events for debugging and monitoring
+   - Support both `/webhook` and `/` endpoints for flexibility
+
+4. **Error Handling**true
 ---
 # LINE API Integration Library - Project Rules
 
@@ -152,7 +161,15 @@ Each commit message must include:
    - Text message support
    - Async HTTP client integration
 
-3. **Flex Messages** (`line_api/flex_messages/`)
+3. **Webhook Processing** (`line_api/webhook/`)
+   - Complete webhook event handling
+   - LINE signature verification for security
+   - Decorator-based event handlers (message, postback, follow, etc.)
+   - Type-safe Pydantic models for all LINE event types
+   - FastAPI integration with proper error handling
+   - Duplicate event detection and processing
+
+4. **Flex Messages** (`line_api/flex_messages/`)
    - Complete Pydantic models for all Flex components
    - Type-safe factory methods (.create())
    - JSON export utilities with clipboard integration
@@ -164,7 +181,6 @@ Each commit message must include:
 - Rich Menu management
 - LINE Login OAuth2 integration
 - LIFF (LINE Front-end Framework) support
-- Webhook signature verification
 - Advanced message types (images, videos, audio)
 
 ## Environment Setup
