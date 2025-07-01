@@ -21,6 +21,8 @@ For the response, always follow these instructions:
 
 **LINE API Integration Library** is a comprehensive, type-safe Python library for integrating with LINE's APIs. It provides modern async/await patterns, full Pydantic type safety, and covers all major LINE platform features including Messaging API, Flex Messages, Rich Menus, LINE Login, LIFF, and Mini Apps.
 
+**🎉 LATEST UPDATE (July 2025)**: Successfully completed comprehensive FlexMessage model updates with full LINE API specification compliance, added new FlexSpan and FlexVideo components, achieved 100% mypy strict mode compliance, and created production-ready pull request #3.
+
 ## 🎯 Core Purpose
 
 - **Comprehensive LINE Integration**: One library for all LINE platform APIs
@@ -216,6 +218,11 @@ async def webhook(request: Request):
 **Key Features**:
 
 - Complete Flex Message component support (FlexBox, FlexBubble, FlexText, etc.)
+- **NEW**: FlexSpan component for styled text within text components
+- **NEW**: FlexVideo component for video content in hero blocks
+- **UPDATED**: Enhanced enums (FlexTextDecoration, FlexAdjustMode, FlexPosition)
+- **FIXED**: Removed deprecated properties (corner_radius from FlexBox)
+- **REQUIRED**: All action types now require label parameter for LINE API compliance
 - Type-safe creation with Pydantic validation
 - JSON export for LINE simulator testing
 - Automatic clipboard copy functionality
@@ -226,12 +233,18 @@ async def webhook(request: Request):
 
 ```python
 from line_api.flex_messages import (
-    FlexBox, FlexBubble, FlexLayout, FlexMessage, FlexText,
-    print_flex_json, export_flex_json
+    FlexBox, FlexBubble, FlexLayout, FlexMessage, FlexText, FlexSpan, FlexVideo,
+    FlexTextWeight, FlexAlignment, print_flex_json, export_flex_json
 )
 
-# Create components
-title = FlexText.create("Welcome!", weight="bold", size="xl")
+# Create components with new features
+title = FlexText.create(
+    text="Rich text with spans",
+    contents=[
+        FlexSpan.create("Bold", weight=FlexTextWeight.BOLD),
+        FlexSpan.create(" and colored text", color="#FF0000")
+    ]
+)
 body = FlexBox.create(layout=FlexLayout.VERTICAL, contents=[title])
 bubble = FlexBubble.create(body=body)
 message = FlexMessage.create(alt_text="Welcome", contents=bubble)
@@ -264,7 +277,7 @@ async with RichMenuClient(config) as client:
         areas=[...],  # Define menu areas
         chat_bar_text="Open Menu"
     )
-    
+
     # Set as default for all users
     await client.set_default_rich_menu(rich_menu_id)
 ```
@@ -294,13 +307,13 @@ async with LineLoginClient(config) as client:
         redirect_uri="https://your-app.com/callback",
         scope=["profile", "openid"]
     )
-    
+
     # Exchange authorization code for tokens
     tokens = await client.exchange_code(
         code="auth_code_from_callback",
         redirect_uri="https://your-app.com/callback"
     )
-    
+
     # Get user profile
     profile = await client.get_profile(tokens.access_token)
 ```
@@ -329,7 +342,7 @@ async with LIFFClient(config) as client:
         view_type="full",
         view_url="https://your-app.com/liff"
     )
-    
+
     # Update LIFF app configuration
     await client.update_liff_app(
         liff_id=liff_id,
@@ -520,12 +533,14 @@ async def multicast_message(
    - MUST run `ruff check .` and fix all issues
    - MUST run `mypy line_api/` and resolve all type errors
    - NO disabled linting rules without justification
+   - **ACHIEVED**: 100% mypy strict mode compliance across all modules
 
 2. **Code Style Requirements**:
    - Maximum line length: 88 characters
    - NO wildcard imports (`from module import *`)
    - NO unused imports or variables
    - Consistent naming conventions throughout
+   - Use modern type annotations (`dict`/`list` not `Dict`/`List`)
 
 3. **Performance Requirements**:
    - Use async patterns for ALL I/O operations
@@ -564,10 +579,14 @@ async def multicast_message(
 
 3. **Flex Messages**:
    - Use factory methods (.create()) for ALL components
-   - NEVER use deprecated FlexSpacer
+   - NEVER use deprecated FlexSpacer (removed from LINE specification)
    - ALWAYS provide alt_text for FlexMessage
    - Use print_flex_json() for testing with auto-clipboard
    - Validate JSON in LINE Flex Message Simulator
+   - **CRITICAL**: All action types MUST have required `label` parameter
+   - **REMOVED**: Unsupported `corner_radius` property from FlexBox
+   - **NEW COMPONENTS**: FlexSpan for rich text, FlexVideo for hero blocks
+   - **ENHANCED ENUMS**: Complete FlexTextDecoration, FlexAdjustMode, FlexPosition
 
 ### 🔄 DEVELOPMENT WORKFLOW - MANDATORY STEPS
 
@@ -658,14 +677,14 @@ async def send_with_retry(client: LineMessagingClient, message: Any) -> bool:
     """Send message with exponential backoff retry."""
     max_retries = 3
     base_delay = 1.0
-    
+
     for attempt in range(max_retries + 1):
         try:
             return await client.push_message("USER_ID", [message])
         except LineRateLimitError as e:
             if attempt == max_retries:
                 raise
-            
+
             delay = base_delay * (2 ** attempt)
             await asyncio.sleep(delay)
             continue

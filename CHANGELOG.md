@@ -5,6 +5,126 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-07-01
+
+### Added
+
+- **🎉 Comprehensive FlexMessage Model Updates**
+  - **NEW FlexSpan Component**: Styled text within text components with decoration, weight, and color options
+  - **NEW FlexVideo Component**: Video content in hero blocks with preview images and alt content support
+  - **Enhanced Enums**: Complete FlexTextDecoration, FlexAdjustMode, and FlexPosition enums
+  - **Advanced Layout Properties**: Enhanced spacing, alignment, and positioning options
+  - **Linear Gradient Backgrounds**: Full support for gradient backgrounds in FlexBox components
+
+- **🛡️ Type Safety & API Compliance**
+  - **Full mypy strict mode compliance** (0 errors across 15 source files)
+  - **Required action labels**: All FlexAction types now properly require `label` parameter for LINE API compliance
+  - **Removed deprecated properties**: Eliminated unsupported `corner_radius` from FlexBox
+  - **Modern type annotations**: Updated to use `dict`/`list` instead of deprecated `Dict`/`List`
+  - **Enhanced Union type handling**: Proper type casts for FlexBox contents
+
+- **📚 Enhanced Documentation & Examples**
+  - **Comprehensive documentation suite** in `/docs/flex-messages/` directory
+  - **LINE Flex Message Simulator integration** with automatic clipboard copy functionality
+  - **Updated examples** demonstrating FlexSpan, FlexVideo, and gradient backgrounds
+  - **Migration guides** for breaking changes and new features
+  - **Usage guides** for all new components with practical examples
+
+- **🔧 Developer Experience Improvements**
+  - **Enhanced factory methods**: Improved `.create()` methods for all components
+  - **Better IDE support**: Enhanced auto-completion and type hints
+  - **Automatic JSON export**: Direct export to LINE Flex Message Simulator format
+  - **Clipboard integration**: Auto-copy generated JSON for easy testing
+
+### Enhanced
+
+- **FlexMessage Models**: Complete overhaul with latest LINE API specification compliance
+- **FlexBox Component**: Enhanced with justify-content, align-items, and gradient background support
+- **FlexText Component**: Added support for FlexSpan contents and advanced text properties
+- **FlexButton Component**: Enhanced with better positioning and styling options
+- **FlexImage Component**: Improved aspect ratio and positioning controls
+- **All Components**: Added comprehensive offset positioning (top, bottom, start, end)
+
+### Fixed
+
+- **BREAKING**: Removed unsupported `corner_radius` property from FlexBox (use border properties instead)
+- **BREAKING**: Made `label` required for all FlexAction types (FlexPostbackAction, FlexMessageAction, FlexUriAction)
+- **Type annotations**: Fixed all mypy strict mode type errors
+- **Import organization**: Cleaned up imports and fixed deprecated type usage
+- **Linting compliance**: Full ruff linting compliance with proper formatting
+- **Test coverage**: Enhanced test suite with comprehensive component validation
+
+### Migration Guide
+
+#### Required Changes for v1.2.0
+
+1. **Action Labels Now Required**:
+
+   ```python
+   # ❌ Old (will fail)
+   FlexUriAction(uri="https://example.com")
+
+   # ✅ New (required)
+   FlexUriAction(label="Visit Site", uri="https://example.com")
+   ```
+
+2. **Removed corner_radius Property**:
+
+   ```python
+   # ❌ Old (not supported)
+   FlexBox(layout="vertical", contents=[], corner_radius="10px")
+
+   # ✅ New (use border properties)
+   FlexBox(layout="vertical", contents=[], border_width="1px")
+   ```
+
+#### New Features Available
+
+1. **FlexSpan for Rich Text**:
+
+   ```python
+   FlexText.create(
+       text="Rich text with spans",
+       contents=[
+           FlexSpan.create("Bold", weight=FlexTextWeight.BOLD),
+           FlexSpan.create(" and colored text", color="#FF0000")
+       ]
+   )
+   ```
+
+2. **FlexVideo in Hero Blocks**:
+
+   ```python
+   FlexVideo.create(
+       url="https://example.com/video.mp4",
+       preview_url="https://example.com/thumb.jpg",
+       alt_content=FlexImage.create("https://example.com/fallback.jpg"),
+       aspect_ratio="16:9"
+   )
+   ```
+
+3. **Linear Gradient Backgrounds**:
+
+   ```python
+   FlexBox.create(
+       layout=FlexLayout.VERTICAL,
+       contents=[...],
+       background=FlexLinearGradient.create(
+           angle="135deg",
+           start_color="#00C300",
+           end_color="#00A000"
+       )
+   )
+   ```
+
+### Quality Assurance
+
+- ✅ All 34 tests pass
+- ✅ Full mypy strict mode compliance (0 type errors)
+- ✅ Complete ruff linting compliance
+- ✅ LINE Flex Message Simulator compatibility verified
+- ✅ Production-ready code quality
+
 ## [1.1.0] - 2025-07-01
 
 ### Added

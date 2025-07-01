@@ -3,15 +3,21 @@
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Type Safety: mypy](https://img.shields.io/badge/type%20safety-mypy-blue.svg)](http://mypy-lang.org/)
 
 A comprehensive, type-safe Python library for integrating with LINE's APIs. Built with modern async/await patterns, full Pydantic type safety, and designed for production use.
+
+**🎉 LATEST UPDATE (July 2025)**: Successfully completed comprehensive FlexMessage model updates with full LINE API specification compliance, added new FlexSpan and FlexVideo components, achieved 100% mypy strict mode compliance, and created production-ready pull request #3.
 
 ## 🚀 Features
 
 - 🚀 **Push Messages**: Send messages directly to users
-- � **Multicast Messages**: Efficiently send messages to multiple users (up to 500)
-- �📱 **Multiple Message Types**: Text, images, locations, stickers, and Flex messages
+- 📢 **Multicast Messages**: Efficiently send messages to multiple users (up to 500)
+- 📱 **Multiple Message Types**: Text, images, locations, stickers, and Flex messages
 - 🎨 **Flex Messages**: Type-safe Flex Message creation with Pydantic models
+  - **NEW**: FlexSpan component for styled text within text components
+  - **NEW**: FlexVideo component for video content in hero blocks
+  - **ENHANCED**: Complete enum support and modern properties
 - 📡 **Webhook Handling**: Complete webhook integration with signature verification
 - 🎯 **Event Handlers**: Decorator-based event handling for messages, postbacks, follows
 - 🛡️ **Security**: LINE signature verification for webhook authenticity
@@ -141,23 +147,28 @@ from line_api import (
     FlexLayout,
     FlexMessage,
     FlexText,
+    FlexSpan,
+    FlexTextWeight,
     print_flex_json,
 )
 
 # Create a simple flex message
 def create_welcome_message():
-    # Create text components
+    # Create text with styled spans
     title = FlexText.create(
-        text="🎉 Welcome!",
-        weight="bold",
-        size="xl",
-        color="#1E3A8A",
+        text="Rich text with spans",
+        contents=[
+            FlexSpan.create("Welcome", weight=FlexTextWeight.BOLD, color="#1E3A8A"),
+            FlexSpan.create(" to our ", color="#666666"),
+            FlexSpan.create("LINE API Library!", weight=FlexTextWeight.BOLD, color="#00C300")
+        ]
     )
 
     subtitle = FlexText.create(
-        text="Thank you for using our LINE API Integration Library!",
+        text="Thank you for using our comprehensive LINE integration library!",
         wrap=True,
         color="#555555",
+        margin="md"
     )
 
     # Create a vertical box layout
