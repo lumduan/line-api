@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "linekit"
-version = "1.1.0"
-description = "Comprehensive LINE API integration library with enhanced multicast messaging, Flex Messages, Rich Menus, LINE Login, LIFF, and Mini Apps"
+version = "1.2.0"
+description = "Comprehensive LINE API integration library with enhanced FlexMessage components (FlexSpan, FlexVideo), full type safety, multicast messaging, Flex Messages, Rich Menus, LINE Login, LIFF, and Mini Apps"
 readme = {file = "README.md", content-type = "text/markdown"}
 license = {file = "LICENSE"}
 authors = [
