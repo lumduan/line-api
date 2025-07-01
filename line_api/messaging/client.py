@@ -70,6 +70,7 @@ class LineMessagingClient:
         method: str,
         endpoint: str,
         data: dict[str, Any] | None = None,
+        retry_key: str | None = None,
     ) -> dict[str, Any]:
         """
         Make an HTTP request to the LINE API.
@@ -78,6 +79,7 @@ class LineMessagingClient:
             method: HTTP method (GET, POST, etc.)
             endpoint: API endpoint path
             data: Request payload
+            retry_key: Optional retry key for idempotent requests
 
         Returns:
             Response data
@@ -91,6 +93,11 @@ class LineMessagingClient:
         await self._ensure_client()
         url = f"{self.config.api_base_url}/{endpoint}"
 
+        # Prepare headers
+        headers: dict[str, str] = {}
+        if retry_key:
+            headers["X-Line-Retry-Key"] = retry_key
+
         for attempt in range(self.config.max_retries + 1):
             try:
                 if self._client is None:
@@ -98,9 +105,11 @@ class LineMessagingClient:
                     raise LineMessageError(msg)
 
                 if method.upper() == "POST":
-                    response = await self._client.post(url, json=data)
+                    response = await self._client.post(url, json=data, headers=headers)
                 else:
-                    response = await self._client.request(method, url, json=data)
+                    response = await self._client.request(
+                        method, url, json=data, headers=headers
+                    )
 
                 # Handle successful responses
                 if response.status_code == 200:
@@ -185,6 +194,9 @@ class LineMessagingClient:
         self,
         user_id: str,
         messages: list[Any],  # Accept any list of message-like objects
+        notification_disabled: bool | None = None,
+        custom_aggregation_units: list[str] | None = None,
+        retry_key: str | None = None,
     ) -> bool:
         """
         Send push message to a user, group, or room.
@@ -192,6 +204,9 @@ class LineMessagingClient:
         Args:
             user_id: User ID, group ID, or room ID
             messages: List of message objects (max 5)
+            notification_disabled: Whether to disable push notifications
+            custom_aggregation_units: Custom aggregation unit names (max 1)
+            retry_key: Optional retry key for idempotent requests
 
         Returns:
             True if successful
@@ -210,12 +225,22 @@ class LineMessagingClient:
             msg = "Maximum 5 messages allowed"
             raise LineMessageError(msg)
 
-        request = PushMessageRequest(to=user_id, messages=messages)
+        if custom_aggregation_units and len(custom_aggregation_units) > 1:
+            msg = "Maximum 1 custom aggregation unit allowed"
+            raise LineMessageError(msg)
+
+        request = PushMessageRequest(
+            to=user_id,
+            messages=messages,
+            notificationDisabled=notification_disabled,
+            customAggregationUnits=custom_aggregation_units,
+        )
 
         await self._make_request(
             "POST",
             "message/push",
             data=request.model_dump(exclude_none=True),
+            retry_key=retry_key,
         )
 
         if self.config.debug:
@@ -227,13 +252,24 @@ class LineMessagingClient:
         self,
         user_ids: list[str],
         messages: list[Any],  # Accept any list of message-like objects
+        notification_disabled: bool | None = None,
+        custom_aggregation_units: list[str] | None = None,
+        retry_key: str | None = None,
     ) -> bool:
         """
         Send multicast message to multiple users.
 
+        Efficiently sends the same message to multiple user IDs. You can't
+        send messages to group chats or multi-person chats with this method.
+
+        Rate limit: 200 requests per second
+
         Args:
             user_ids: List of user IDs (max 500)
             messages: List of message objects (max 5)
+            notification_disabled: Whether to disable push notifications
+            custom_aggregation_units: Custom aggregation unit names (max 1)
+            retry_key: Optional retry key for idempotent requests
 
         Returns:
             True if successful
@@ -260,17 +296,28 @@ class LineMessagingClient:
             msg = "Maximum 5 messages allowed"
             raise LineMessageError(msg)
 
-        request = MulticastMessageRequest(to=user_ids, messages=messages)
+        if custom_aggregation_units and len(custom_aggregation_units) > 1:
+            msg = "Maximum 1 custom aggregation unit allowed"
+            raise LineMessageError(msg)
+
+        request = MulticastMessageRequest(
+            to=user_ids,
+            messages=messages,
+            notificationDisabled=notification_disabled,
+            customAggregationUnits=custom_aggregation_units,
+        )
 
         await self._make_request(
             "POST",
             "message/multicast",
             data=request.model_dump(exclude_none=True),
+            retry_key=retry_key,
         )
 
         if self.config.debug:
             logger.info(
-                "Multicast message sent successfully to %d users", len(user_ids),
+                "Multicast message sent successfully to %d users",
+                len(user_ids),
             )
 
         return True
@@ -279,6 +326,7 @@ class LineMessagingClient:
         self,
         reply_token: str,
         messages: list[Any],  # Accept any list of message-like objects
+        notification_disabled: bool | None = None,
     ) -> bool:
         """
         Send reply message using reply token from webhook.
@@ -286,6 +334,7 @@ class LineMessagingClient:
         Args:
             reply_token: Reply token from webhook event
             messages: List of message objects (max 5)
+            notification_disabled: Whether to disable push notifications
 
         Returns:
             True if successful
@@ -304,7 +353,11 @@ class LineMessagingClient:
             msg = "Maximum 5 messages allowed"
             raise LineMessageError(msg)
 
-        request = ReplyMessageRequest(replyToken=reply_token, messages=messages)
+        request = ReplyMessageRequest(
+            replyToken=reply_token,
+            messages=messages,
+            notificationDisabled=notification_disabled,
+        )
 
         await self._make_request(
             "POST",

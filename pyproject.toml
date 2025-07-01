@@ -4,12 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "linekit"
-version = "1.0.0"
+version = "1.0.1"
 description = "Comprehensive LINE API integration library with Flex Messages, Rich Menus, LINE Login, LIFF, and Mini Apps"
-readme = "README.md"
+readme = {file = "README.md", content-type = "text/markdown"}
 license = {file = "LICENSE"}
 authors = [
-    {name = "LINE API Integration Library", email = "b@candythink.com"},
+    {name = "Lumduan", email = "b@candythink.com"},
+]
+maintainers = [
+    {name = "Lumduan", email = "b@candythink.com"},
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -62,6 +65,8 @@ Documentation = "https://github.com/lumduan/line-api/blob/main/README.md"
 Changelog = "https://github.com/lumduan/line-api/blob/main/CHANGELOG.md"
 Issues = "https://github.com/lumduan/line-api/issues"
 Repository = "https://github.com/lumduan/line-api"
+"Bug Tracker" = "https://github.com/lumduan/line-api/issues"
+"Source Code" = "https://github.com/lumduan/line-api"
 
 [tool.hatch.build.targets.wheel]
 packages = ["line_api"]

@@ -86,6 +86,7 @@ line-api/
 │   ├── flex_message_example.py     # Flex Message creation
 │   └── push_message_example.py     # Basic message sending
 ├── docs/                           # 📖 Documentation
+│   ├── WEBHOOK_SETUP.md            # Webhook setup guide
 │   ├── api/                        # API reference documentation
 │   ├── guides/                     # Usage guides and tutorials
 │   └── examples/                   # Detailed examples
@@ -138,6 +139,17 @@ LINE_API_MAX_RETRIES=3
 - Secure credential management
 
 **Usage**:
+
+```python
+from line_api.core import LineAPIConfig
+
+# Automatic .env loading and validation
+config = LineAPIConfig()
+
+# Access configuration with type safety
+print(f"Channel ID: {config.line_channel_access_token}")
+print(f"Timeout: {config.line_api_timeout}")
+```
 
 
 ### 2. Messaging API (`messaging/`)
@@ -242,6 +254,21 @@ export_flex_json(message, "welcome.json")  # Save to file
 
 **Usage**:
 
+```python
+from line_api.rich_menu import RichMenuClient
+
+async with RichMenuClient(config) as client:
+    # Create and upload rich menu
+    rich_menu_id = await client.create_rich_menu(
+        name="Main Menu",
+        areas=[...],  # Define menu areas
+        chat_bar_text="Open Menu"
+    )
+    
+    # Set as default for all users
+    await client.set_default_rich_menu(rich_menu_id)
+```
+
 
 
 ### 6. LINE Login (`login/`)
@@ -258,6 +285,26 @@ export_flex_json(message, "welcome.json")  # Save to file
 
 **Usage**:
 
+```python
+from line_api.login import LineLoginClient
+
+async with LineLoginClient(config) as client:
+    # Generate OAuth2 authorization URL
+    auth_url = await client.get_authorization_url(
+        redirect_uri="https://your-app.com/callback",
+        scope=["profile", "openid"]
+    )
+    
+    # Exchange authorization code for tokens
+    tokens = await client.exchange_code(
+        code="auth_code_from_callback",
+        redirect_uri="https://your-app.com/callback"
+    )
+    
+    # Get user profile
+    profile = await client.get_profile(tokens.access_token)
+```
+
 
 
 ### 7. LIFF Management (`liff/`)
@@ -273,11 +320,53 @@ export_flex_json(message, "welcome.json")  # Save to file
 
 **Usage**:
 
+```python
+from line_api.liff import LIFFClient
+
+async with LIFFClient(config) as client:
+    # Create a new LIFF app
+    liff_id = await client.create_liff_app(
+        view_type="full",
+        view_url="https://your-app.com/liff"
+    )
+    
+    # Update LIFF app configuration
+    await client.update_liff_app(
+        liff_id=liff_id,
+        view_url="https://your-app.com/liff/updated"
+    )
+```
+
 
 
 ## 🧪 Testing Strategy
 
 ### Test Infrastructure
+
+**Testing Framework**: pytest with pytest-asyncio for async support
+
+**Test Categories**:
+- **Unit Tests**: Individual function and method testing with mocking
+- **Integration Tests**: End-to-end testing with real LINE API responses
+- **Mock Tests**: Complete API interaction testing with controlled responses
+- **Edge Case Tests**: Error conditions, rate limits, and boundary conditions
+
+**Test Structure**:
+```python
+# tests/test_messaging.py example
+@pytest.mark.asyncio
+async def test_multicast_message_success():
+    """Test successful multicast message sending."""
+    # Arrange: Setup mock client and data
+    # Act: Call the function
+    # Assert: Verify expected behavior
+```
+
+**Coverage Requirements**:
+- Minimum 90% overall code coverage
+- 100% coverage for public APIs
+- All error conditions must be tested
+- All LINE API edge cases covered
 
 
 
@@ -290,59 +379,255 @@ When using AI models such as GPT-4.1, GPT-4o, or any model that cannot directly 
 - **Safety Rationale**: This restriction is in place to prevent accidental or unauthorized file deletion and to ensure user control over destructive actions.
 - **Workflow Guidance**: Always confirm file removal by running the suggested command in your terminal or file manager.
 
-## � AI Agent Instructions
+## 🤖 AI Agent Instructions - STRICT COMPLIANCE REQUIRED
 
-When working with this project:
+**CRITICAL**: All AI agents working on this project MUST follow these instructions precisely. Deviation from these guidelines is not permitted.
 
-1. **Understand the Architecture**: This is a comprehensive LINE API integration library built for production use
-2. **Follow Modern Python Patterns**:
-   - Use async/await for all I/O operations
-   - Full type hints throughout the codebase
-   - Pydantic models for data validation
-   - Context managers for resource management
-3. **Type Safety First**:
-   - All functions must have complete type annotations
-   - Use Pydantic models for data structures
-   - Validate inputs and outputs
-   - Leverage IDE type checking support
-4. **Error Handling**:
-   - Use typed exceptions for different error scenarios
-   - Implement proper retry mechanisms
-   - Log errors with structured logging
-   - Provide helpful error messages
-5. **Testing**:
-   - Write tests for all new functionality
-   - Use async testing patterns
-   - Mock external APIs appropriately
-   - Include integration tests for critical paths
-6. **Documentation**:
-   - Comprehensive docstrings for all public functions
-   - Include usage examples in docstrings
-   - Update README.md for new features
-   - Maintain API documentation
-7. **Code Quality**:
-   - Use `ruff` for linting and formatting
-   - Run `mypy` for type checking
-   - Follow the existing code style
-   - Keep functions focused and small
-8. **Performance**:
-   - Use async patterns for I/O operations
-   - Implement proper rate limiting
+### 🚨 MANDATORY PRE-WORK VALIDATION
+
+Before making ANY changes:
+
+1. **ALWAYS** read the current file contents completely before editing
+2. **ALWAYS** run existing tests to ensure no regressions: `python -m pytest tests/ -v`
+3. **ALWAYS** check git status and current branch before making changes
+4. **ALWAYS** validate that your changes align with the project architecture
+
+### 🎯 CORE ARCHITECTURAL PRINCIPLES - NON-NEGOTIABLE
+
+1. **Type Safety is MANDATORY**:
+   - ALL functions MUST have complete type annotations
+   - ALL data structures MUST use Pydantic models
+   - ALL inputs and outputs MUST be validated
+   - NO `Any` types without explicit justification
+   - NO missing type hints on public APIs
+
+2. **Async-First Architecture is REQUIRED**:
+   - ALL I/O operations MUST use async/await patterns
+   - ALL HTTP clients MUST be async (httpx, not requests)
+   - ALL database operations MUST be async
+   - Context managers MUST be used for resource management
+
+3. **Pydantic Integration is MANDATORY**:
+   - ALL configuration MUST use Pydantic Settings
+   - ALL API request/response models MUST use Pydantic
+   - ALL validation MUST use Pydantic validators
+   - Field descriptions and constraints are REQUIRED
+
+4. **Error Handling Must Be Comprehensive**:
+   - ALL exceptions MUST be typed and specific
+   - ALL external API calls MUST have retry mechanisms
+   - ALL errors MUST be logged with structured data
+   - User-facing error messages MUST be helpful and actionable
+
+### 📁 FILE ORGANIZATION - STRICT RULES
+
+#### Directory Structure Requirements:
+- `/line_api/`: ONLY production code, NO debug scripts
+- `/tests/`: ALL pytest tests, comprehensive coverage required
+- `/examples/`: ONLY real-world usage examples, fully functional
+- `/docs/`: ALL documentation, including moved WEBHOOK_SETUP.md
+- `/debug/`: Temporary debug scripts ONLY (gitignored)
+- `/scripts/`: Utility scripts for development and CI/CD
+
+#### File Naming Conventions:
+- Snake_case for all Python files
+- Clear, descriptive names indicating purpose
+- Test files MUST match pattern `test_*.py`
+- Example files MUST match pattern `*_example.py`
+
+#### Import Organization (MANDATORY):
+```python
+# 1. Standard library imports
+import asyncio
+from typing import Any, Optional
+
+# 2. Third-party imports
+import httpx
+from pydantic import BaseModel
+
+# 3. Local imports
+from line_api.core import LineAPIConfig
+from line_api.messaging import LineMessagingClient
+```
+
+### 🧪 TESTING REQUIREMENTS - NO EXCEPTIONS
+
+1. **ALL new features MUST have tests**:
+   - Unit tests for all functions
+   - Integration tests for API interactions
+   - Async test patterns using pytest-asyncio
+   - Mock external dependencies appropriately
+
+2. **Test Coverage Standards**:
+   - Minimum 90% code coverage
+   - 100% coverage for public APIs
+   - Edge cases and error conditions MUST be tested
+
+3. **Test Quality Requirements**:
+   - Clear test names describing what is being tested
+   - Arrange-Act-Assert pattern
+   - No test interdependencies
+   - Fast execution (no real API calls in unit tests)
+
+### 📝 DOCUMENTATION STANDARDS - MANDATORY
+
+1. **Docstring Requirements**:
+   - ALL public functions MUST have comprehensive docstrings
+   - Include parameter descriptions with types
+   - Include return value descriptions
+   - Include usage examples for complex functions
+   - Include exception documentation
+
+2. **Example Format**:
+```python
+async def multicast_message(
+    self,
+    user_ids: list[str],
+    messages: list[Any],
+    notification_disabled: Optional[bool] = None,
+) -> bool:
+    """
+    Send multicast message to multiple users.
+
+    Efficiently sends the same message to multiple user IDs. Cannot send
+    messages to group chats or multi-person chats.
+
+    Args:
+        user_ids: List of user IDs (max 500)
+        messages: List of message objects (max 5)
+        notification_disabled: Whether to disable push notifications
+
+    Returns:
+        True if successful
+
+    Raises:
+        LineMessageError: If message sending fails
+        LineRateLimitError: If rate limit exceeded
+
+    Example:
+        >>> async with LineMessagingClient(config) as client:
+        ...     success = await client.multicast_message(
+        ...         user_ids=["user1", "user2"],
+        ...         messages=[TextMessage.create("Hello!")],
+        ...     )
+    """
+```
+
+### 🔧 CODE QUALITY - STRICT ENFORCEMENT
+
+1. **Linting and Formatting**:
+   - MUST run `ruff format .` before committing
+   - MUST run `ruff check .` and fix all issues
+   - MUST run `mypy line_api/` and resolve all type errors
+   - NO disabled linting rules without justification
+
+2. **Code Style Requirements**:
+   - Maximum line length: 88 characters
+   - NO wildcard imports (`from module import *`)
+   - NO unused imports or variables
+   - Consistent naming conventions throughout
+
+3. **Performance Requirements**:
+   - Use async patterns for ALL I/O operations
+   - Implement proper connection pooling
    - Cache responses when appropriate
    - Monitor memory usage for large operations
-9. **Flex Messages Specific**:
-   - Use factory methods (.create()) for all components
-   - Never use deprecated FlexSpacer (removed from LINE spec)
-   - Always provide alt_text for FlexMessage
+
+### 🛡️ SECURITY REQUIREMENTS - NON-NEGOTIABLE
+
+1. **Credential Management**:
+   - NO hardcoded secrets or tokens
+   - ALL credentials MUST use environment variables
+   - Pydantic SecretStr for sensitive data
+   - Secure defaults for all configuration
+
+2. **API Security**:
+   - ALWAYS verify LINE webhook signatures
+   - Implement proper rate limiting
+   - Validate ALL input data
+   - Log security events appropriately
+
+### 🚀 LINE API SPECIFIC REQUIREMENTS
+
+1. **Messaging API**:
+   - Support ALL optional parameters per LINE API spec
+   - Implement retry mechanisms with exponential backoff
+   - Proper rate limiting (respect LINE's limits)
+   - Comprehensive error handling for all status codes
+
+2. **Webhook Processing**:
+   - ALWAYS verify signatures for security
+   - Use decorator-based event handlers
+   - Handle ALL event types gracefully
+   - Implement duplicate event detection
+   - Use proper HTTP status codes
+
+3. **Flex Messages**:
+   - Use factory methods (.create()) for ALL components
+   - NEVER use deprecated FlexSpacer
+   - ALWAYS provide alt_text for FlexMessage
    - Use print_flex_json() for testing with auto-clipboard
-   - Validate JSON output in LINE Flex Message Simulator
-10. **Webhook Processing Specific**:
-   - Always verify LINE signatures for security
-   - Use decorator-based event handlers for clean code organization
-   - Handle all event types gracefully with proper error logging
-   - Implement duplicate event detection for reliability
-   - Use proper HTTP status codes (200 for success, 401 for invalid signature)
-   - Log all webhook events for debugging and monitoring
+   - Validate JSON in LINE Flex Message Simulator
+
+### 🔄 DEVELOPMENT WORKFLOW - MANDATORY STEPS
+
+#### Before Starting ANY Task:
+1. Create feature branch: `git checkout -b feature/description`
+2. Read ALL relevant existing code
+3. Check current tests: `python -m pytest tests/ -v`
+4. Understand the current implementation completely
+
+#### During Development:
+1. Write tests FIRST (TDD approach preferred)
+2. Implement with full type hints
+3. Add comprehensive docstrings
+4. Run tests frequently: `python -m pytest tests/test_specific.py -v`
+
+#### Before Committing:
+1. Run ALL tests: `python -m pytest tests/ -v`
+2. Run type checking: `mypy line_api/`
+3. Run linting: `ruff check . && ruff format .`
+4. Verify examples still work
+5. Update documentation if needed
+
+#### Git Commit Requirements:
+- Clear, descriptive commit messages
+- Include what was changed and why
+- Reference any related issues
+- Follow conventional commit format when possible
+
+### ❌ PROHIBITED ACTIONS
+
+1. **NEVER** use bare `except:` clauses
+2. **NEVER** ignore type checker warnings without justification
+3. **NEVER** hardcode credentials or secrets
+4. **NEVER** commit debug print statements
+5. **NEVER** break existing public APIs without deprecation
+6. **NEVER** add dependencies without updating pyproject.toml
+7. **NEVER** commit code that doesn't pass all tests
+8. **NEVER** use synchronous I/O for external API calls
+
+### 🏆 QUALITY GATES - ALL MUST PASS
+
+Before any code is considered complete:
+
+- [ ] All tests pass: `python -m pytest tests/ -v`
+- [ ] Type checking passes: `mypy line_api/`
+- [ ] Linting passes: `ruff check .`
+- [ ] Code is formatted: `ruff format .`
+- [ ] Documentation is updated
+- [ ] Examples work correctly
+- [ ] Performance is acceptable
+- [ ] Security review completed
+
+### 🚨 VIOLATION CONSEQUENCES
+
+Failure to follow these guidelines will result in:
+1. Immediate rejection of changes
+2. Required rework with full compliance
+3. Additional review requirements for future changes
+
+**These guidelines are not suggestions - they are requirements for maintaining the quality and reliability of this production-grade LINE API integration library.**
 
 ### Development Guidelines
 
@@ -366,6 +651,32 @@ When working with this project:
 #### Error Handling Patterns
 
 ```python
+from line_api.core.exceptions import LineAPIError, LineRateLimitError
+
+# Proper exception handling with retry
+async def send_with_retry(client: LineMessagingClient, message: Any) -> bool:
+    """Send message with exponential backoff retry."""
+    max_retries = 3
+    base_delay = 1.0
+    
+    for attempt in range(max_retries + 1):
+        try:
+            return await client.push_message("USER_ID", [message])
+        except LineRateLimitError as e:
+            if attempt == max_retries:
+                raise
+            
+            delay = base_delay * (2 ** attempt)
+            await asyncio.sleep(delay)
+            continue
+        except LineAPIError as e:
+            # Log error with structured data
+            logger.error(
+                "Message send failed",
+                extra={"user_id": "USER_ID", "error": str(e)}
+            )
+            raise
+```
 
 
 ### Production Considerations
@@ -396,5 +707,5 @@ When working with this project:
 - **Test files**: Examples of proper usage and expected behavior
 - **Integration guides**: Patterns for using shared tools in services
 
-The shared tools package is the foundation of the StockLatte ecosystem, providing consistent patterns and utilities that enable rapid development of new services while maintaining code quality and consistency across the platform.
+This LINE API Integration Library provides comprehensive, type-safe Python integration with all LINE platform APIs, enabling developers to build robust LINE-based applications with modern async/await patterns and full Pydantic validation.
 `````
