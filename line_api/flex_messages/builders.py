@@ -5,9 +5,22 @@ This module provides builders for creating common types of Flex Messages
 with a simple, fluent API.
 """
 
-from typing import Optional
+from typing import Optional, Union, cast
 
-from .models import FlexBox, FlexComponent, FlexLayout, FlexSeparator, FlexText
+from .models import (
+    FlexAlignment,
+    FlexBox,
+    FlexButton,
+    FlexComponent,
+    FlexFiller,
+    FlexIcon,
+    FlexImage,
+    FlexLayout,
+    FlexSeparator,
+    FlexText,
+    FlexTextWeight,
+    FlexVideo,
+)
 
 
 class BaseFlexBuilder:
@@ -52,13 +65,13 @@ class BaseFlexBuilder:
         title_color = title_color or BaseFlexBuilder.PRIMARY_COLOR
         bg_color = bg_color or BaseFlexBuilder.PRIMARY_BG
 
-        contents: list[FlexComponent] = [
+        contents = [
             FlexText.create(
                 text=f"{icon} {title}".strip(),
-                weight="bold",
+                weight=FlexTextWeight.BOLD,
                 size="xl",
                 color=title_color,
-                align="center",
+                align=FlexAlignment.CENTER,
             ),
         ]
 
@@ -68,13 +81,16 @@ class BaseFlexBuilder:
                     text=subtitle,
                     size="md",
                     color=BaseFlexBuilder.SUBTITLE_COLOR,
-                    align="center",
+                    align=FlexAlignment.CENTER,
                 ),
             )
 
         return FlexBox.create(
             layout=FlexLayout.VERTICAL,
-            contents=contents,
+            contents=cast(
+                "list[Union[FlexText, FlexButton, FlexImage, FlexIcon, FlexSeparator, FlexVideo, FlexFiller, FlexBox]]",
+                contents,
+            ),
             background_color=bg_color,
             padding_all="20px",
         )
@@ -85,7 +101,7 @@ class BaseFlexBuilder:
         value: str,
         label_color: Optional[str] = None,
         value_color: Optional[str] = None,
-        value_weight: Optional[str] = None,
+        value_weight: Optional[FlexTextWeight] = None,
     ) -> FlexBox:
         """
         Create a horizontal info row with label and value.
@@ -104,7 +120,10 @@ class BaseFlexBuilder:
         label_color = label_color or BaseFlexBuilder.SUBTITLE_COLOR
         value_color = value_color or BaseFlexBuilder.TEXT_COLOR
 
-        contents: list[FlexComponent] = [
+        # Convert string weight to enum if provided
+        weight_enum = value_weight
+
+        contents = [
             FlexText.create(
                 text=label,
                 size="sm",
@@ -115,15 +134,18 @@ class BaseFlexBuilder:
                 text=value,
                 size="sm",
                 color=value_color,
-                weight=value_weight,
+                weight=weight_enum,
                 flex=1,
-                align="end",
+                align=FlexAlignment.END,
             ),
         ]
 
         return FlexBox.create(
             layout=FlexLayout.HORIZONTAL,
-            contents=contents,
+            contents=cast(
+                "list[Union[FlexText, FlexButton, FlexImage, FlexIcon, FlexSeparator, FlexVideo, FlexFiller, FlexBox]]",
+                contents,
+            ),
         )
 
     @staticmethod
@@ -148,7 +170,7 @@ class BaseFlexBuilder:
 
         return FlexText.create(
             text=f"{icon} {title}".strip(),
-            weight="bold",
+            weight=FlexTextWeight.BOLD,
             size="lg",
             color=color,
         )
@@ -200,6 +222,9 @@ class FlexMessageBuilder:
         return FlexBox.create(
             layout=FlexLayout.VERTICAL,
             spacing="sm",
-            contents=contents,
+            contents=cast(
+                "list[Union[FlexText, FlexButton, FlexImage, FlexIcon, FlexSeparator, FlexVideo, FlexFiller, FlexBox]]",
+                contents,
+            ),
             padding_all="20px",
         )

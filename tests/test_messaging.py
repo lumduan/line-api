@@ -164,7 +164,8 @@ async def test_multicast_message_enhanced_validation(
 
     # Test too many custom aggregation units
     with pytest.raises(
-        LineMessageError, match="Maximum 1 custom aggregation unit allowed"
+        LineMessageError,
+        match="Maximum 1 custom aggregation unit allowed",
     ):
         await client.multicast_message(
             user_ids=user_ids,
