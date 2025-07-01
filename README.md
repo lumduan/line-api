@@ -88,30 +88,30 @@ from line_api import LineAPIConfig, LineMessagingClient, TextMessage
 async def send_multicast():
     # Load configuration
     config = LineAPIConfig.from_env_file()
-    
+
     # User IDs to send to (get these from webhook events)
     user_ids = [
         "U1234567890abcdef1234567890abcdef",  # User ID 1
         "U0987654321fedcba0987654321fedcba",  # User ID 2
         "Uabcdef1234567890abcdef1234567890",  # User ID 3
     ]
-    
+
     # Create messages (up to 5 messages)
     messages = [
         TextMessage.create("🎉 Hello everyone!"),
         TextMessage.create("This message was sent to multiple users simultaneously."),
     ]
-    
+
     async with LineMessagingClient(config) as client:
         # Basic multicast
         success = await client.multicast_message(
             user_ids=user_ids,
             messages=messages,
         )
-        
+
         if success:
             print(f"✅ Multicast sent to {len(user_ids)} users!")
-        
+
         # Advanced multicast with options
         success = await client.multicast_message(
             user_ids=user_ids,
@@ -120,7 +120,7 @@ async def send_multicast():
             custom_aggregation_units=["summer_campaign_2024"],  # For analytics
             retry_key=str(uuid.uuid4()),  # For request idempotency
         )
-        
+
         # Silent multicast (no push notifications)
         success = await client.multicast_message(
             user_ids=user_ids,
