@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-07-01
+
+### Added
+
+- **Enhanced Multicast Messaging**
+  - Full LINE API support with all optional parameters
+  - `notification_disabled` parameter for silent message sending
+  - `custom_aggregation_units` for analytics tracking and campaign management
+  - `retry_key` parameter for idempotent message sending
+  - Comprehensive error handling and validation
+  - Interactive examples with user input for testing
+
+- **Strict Development Guidelines**
+  - Comprehensive AI agent instructions with non-negotiable requirements
+  - Mandatory type safety, async patterns, and testing standards
+  - Quality gates that must pass before code completion
+  - Security requirements for credential management
+  - Performance standards for async operations
+
+- **Improved Project Structure**
+  - Moved documentation to proper `docs/` directory organization
+  - Enhanced project structure with clear separation of concerns
+  - Better examples with real-world usage scenarios
+  - Comprehensive testing patterns and coverage requirements
+
+### Enhanced
+
+- **LineMessagingClient**: Added support for all multicast API parameters
+- **Request Models**: Enhanced with notification and analytics options
+- **Examples**: Added comprehensive multicast examples with interactive input
+- **Documentation**: Updated with new features and usage patterns
+
+### Fixed
+
+- **Project Organization**: Proper documentation structure in `docs/` directory
+- **Type Safety**: Enhanced type coverage for all new features
+- **Error Handling**: Better error messages and user guidance
+
 ## [1.0.0] - 2025-06-30
 
 ### Added
