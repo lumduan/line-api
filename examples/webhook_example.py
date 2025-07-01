@@ -24,7 +24,7 @@ Usage:
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -220,7 +220,7 @@ async def handle_leave_event(event: LineEvent) -> None:
 
 
 @app.get("/")
-async def root() -> Dict[str, str]:
+async def root() -> dict[str, str]:
     """Health check endpoint."""
     return {"status": "LINE Webhook Server is running", "version": "1.0.0"}
 
@@ -238,7 +238,7 @@ async def root_webhook(request: Request) -> JSONResponse:
 
 
 @app.get("/health")
-async def health_check() -> Dict[str, Any]:
+async def health_check() -> dict[str, Any]:
     """Detailed health check endpoint."""
     return {
         "status": "healthy",

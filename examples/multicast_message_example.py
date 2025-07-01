@@ -39,10 +39,10 @@ def get_user_ids_from_input() -> list[str]:
 
     """
     print(
-        "\n📝 Enter user IDs for testing (press Enter after each ID, empty line to finish):"
+        "\n📝 Enter user IDs for testing (press Enter after each ID, empty line to finish):",
     )
     print(
-        "💡 You can get user IDs from webhook events when users interact with your bot"
+        "💡 You can get user IDs from webhook events when users interact with your bot",
     )
     print("💡 For testing, you can use your own user ID from LINE Developers Console")
 
@@ -50,7 +50,7 @@ def get_user_ids_from_input() -> list[str]:
     while True:
         try:
             user_id = input(
-                f"User ID #{len(user_ids) + 1} (or press Enter to finish): "
+                f"User ID #{len(user_ids) + 1} (or press Enter to finish): ",
             ).strip()
             if not user_id:
                 break
@@ -62,7 +62,7 @@ def get_user_ids_from_input() -> list[str]:
 
     if not user_ids:
         print(
-            "⚠️  No user IDs entered. Using default placeholder IDs for demonstration."
+            "⚠️  No user IDs entered. Using default placeholder IDs for demonstration.",
         )
         return ["USER_ID_1", "USER_ID_2"]
 
@@ -82,7 +82,7 @@ async def send_basic_multicast_text(user_ids: Optional[list[str]] = None) -> Non
 
     # Create a simple text message
     message = TextMessage.create(
-        "🎉 Hello from multicast! This message was sent to multiple users simultaneously."
+        "🎉 Hello from multicast! This message was sent to multiple users simultaneously.",
     )
 
     try:
@@ -93,7 +93,7 @@ async def send_basic_multicast_text(user_ids: Optional[list[str]] = None) -> Non
             )
             if success:
                 print(
-                    f"✅ Multicast message sent successfully to {len(user_ids)} users!"
+                    f"✅ Multicast message sent successfully to {len(user_ids)} users!",
                 )
             else:
                 print("❌ Failed to send multicast message")
@@ -309,7 +309,7 @@ async def demonstrate_error_handling() -> None:
                     custom_aggregation_units=test_case.get("custom_aggregation_units"),  # type: ignore
                 )
                 print(
-                    f"❌ Expected error for '{test_case['name']}' but request succeeded"
+                    f"❌ Expected error for '{test_case['name']}' but request succeeded",
                 )
             except Exception as e:
                 print(f"✅ Correctly caught error for '{test_case['name']}': {e}")
@@ -322,10 +322,10 @@ async def main() -> None:
 
     # Get user IDs once for all examples
     print(
-        "⚠️  Important: You need valid user IDs from your LINE channel to test multicast messages"
+        "⚠️  Important: You need valid user IDs from your LINE channel to test multicast messages",
     )
     print(
-        "   You can get user IDs from webhook events when users interact with your bot"
+        "   You can get user IDs from webhook events when users interact with your bot",
     )
 
     use_input = (

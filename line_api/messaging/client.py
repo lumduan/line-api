@@ -108,7 +108,10 @@ class LineMessagingClient:
                     response = await self._client.post(url, json=data, headers=headers)
                 else:
                     response = await self._client.request(
-                        method, url, json=data, headers=headers
+                        method,
+                        url,
+                        json=data,
+                        headers=headers,
                     )
 
                 # Handle successful responses

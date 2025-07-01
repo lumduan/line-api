@@ -1,5 +1,5 @@
 """
-LINE Webhook Models
+LINE Webhook Models.
 
 This module provides Pydantic models for LINE webhook events and payloads,
 ensuring type safety and validation for all webhook data structures.
@@ -8,7 +8,7 @@ Based on the official LINE Messaging API documentation:
 https://developers.line.biz/en/reference/messaging-api/#webhook-event-objects
 """
 
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Literal, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -59,7 +59,7 @@ class LineMentionObject(BaseModel):
 
     """
 
-    mentionees: List[LineMention] = Field(description="List of mentioned users")
+    mentionees: list[LineMention] = Field(description="List of mentioned users")
 
 
 class LineTextMessage(BaseModel):
@@ -92,7 +92,7 @@ class LineTextMessage(BaseModel):
         default=None,
         description="Mention information",
     )
-    emojis: Optional[List[Dict[str, Any]]] = Field(
+    emojis: Optional[list[dict[str, Any]]] = Field(
         default=None,
         description="Emoji information",
     )
@@ -122,11 +122,11 @@ class LineImageMessage(BaseModel):
         default=None,
         description="ID of quoted message",
     )
-    contentProvider: Optional[Dict[str, Any]] = Field(
+    contentProvider: Optional[dict[str, Any]] = Field(
         default=None,
         description="Content provider information",
     )
-    imageSet: Optional[Dict[str, Any]] = Field(
+    imageSet: Optional[dict[str, Any]] = Field(
         default=None,
         description="Image set information",
     )
@@ -160,7 +160,7 @@ class LineVideoMessage(BaseModel):
         default=None,
         description="Video duration in milliseconds",
     )
-    contentProvider: Optional[Dict[str, Any]] = Field(
+    contentProvider: Optional[dict[str, Any]] = Field(
         default=None,
         description="Content provider information",
     )
@@ -194,7 +194,7 @@ class LineAudioMessage(BaseModel):
         default=None,
         description="Audio duration in milliseconds",
     )
-    contentProvider: Optional[Dict[str, Any]] = Field(
+    contentProvider: Optional[dict[str, Any]] = Field(
         default=None,
         description="Content provider information",
     )
@@ -261,7 +261,7 @@ class LineStickerMessage(BaseModel):
         default=None,
         description="Type of sticker resource",
     )
-    keywords: Optional[List[str]] = Field(
+    keywords: Optional[list[str]] = Field(
         default=None,
         description="Keywords associated with sticker",
     )
@@ -326,7 +326,7 @@ class LinePostback(BaseModel):
     """
 
     data: str = Field(description="Postback data string")
-    params: Optional[Dict[str, Any]] = Field(
+    params: Optional[dict[str, Any]] = Field(
         default=None,
         description="Additional postback parameters",
     )
@@ -546,7 +546,7 @@ class LineMemberJoinEvent(BaseModel):
         default=None,
         description="Reply token for responding to this event",
     )
-    joined: Dict[str, Any] = Field(description="Information about joined members")
+    joined: dict[str, Any] = Field(description="Information about joined members")
 
 
 class LineMemberLeaveEvent(BaseModel):
@@ -572,7 +572,7 @@ class LineMemberLeaveEvent(BaseModel):
     deliveryContext: LineDeliveryContext = Field(
         description="Delivery context information",
     )
-    left: Dict[str, Any] = Field(description="Information about left members")
+    left: dict[str, Any] = Field(description="Information about left members")
 
 
 class LineUnsendEvent(BaseModel):
@@ -598,7 +598,7 @@ class LineUnsendEvent(BaseModel):
     deliveryContext: LineDeliveryContext = Field(
         description="Delivery context information",
     )
-    unsend: Dict[str, str] = Field(description="Information about unsent message")
+    unsend: dict[str, str] = Field(description="Information about unsent message")
 
 
 class LineVideoPlayCompleteEvent(BaseModel):
@@ -629,7 +629,7 @@ class LineVideoPlayCompleteEvent(BaseModel):
         default=None,
         description="Reply token for responding to this event",
     )
-    videoPlayComplete: Dict[str, Any] = Field(
+    videoPlayComplete: dict[str, Any] = Field(
         description="Video play completion information",
     )
 
@@ -662,7 +662,7 @@ class LineBeaconEvent(BaseModel):
         default=None,
         description="Reply token for responding to this event",
     )
-    beacon: Dict[str, Any] = Field(description="Beacon information")
+    beacon: dict[str, Any] = Field(description="Beacon information")
 
 
 class LineAccountLinkEvent(BaseModel):
@@ -693,7 +693,7 @@ class LineAccountLinkEvent(BaseModel):
         default=None,
         description="Reply token for responding to this event",
     )
-    link: Dict[str, Any] = Field(description="Account link information")
+    link: dict[str, Any] = Field(description="Account link information")
 
 
 # Union type for all event types
@@ -724,7 +724,7 @@ class LineWebhookPayload(BaseModel):
     """
 
     destination: str = Field(description="Bot user ID receiving the webhook")
-    events: List[LineEvent] = Field(description="List of webhook events")
+    events: list[LineEvent] = Field(description="List of webhook events")
 
 
 class WebhookResponse(BaseModel):

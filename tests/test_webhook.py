@@ -236,7 +236,7 @@ class TestWebhookHandler:
         """Test message handler decorator."""
 
         @handler.message_handler
-        async def handle_message(event: LineMessageEvent):
+        async def handle_message(event: LineMessageEvent):  # noqa: ARG001
             return "handled"
 
         assert "message" in handler._event_handlers
@@ -246,7 +246,7 @@ class TestWebhookHandler:
         """Test postback handler decorator."""
 
         @handler.postback_handler
-        async def handle_postback(event):
+        async def handle_postback(event):  # noqa: ARG001
             return "handled"
 
         assert "postback" in handler._event_handlers

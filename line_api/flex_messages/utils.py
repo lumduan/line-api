@@ -13,13 +13,12 @@ from .models import FlexBubble, FlexCarousel, FlexMessage
 
 # Try to import pyperclip for clipboard functionality
 _clipboard_available = False
-_pyperclip = None
 try:
-    import pyperclip as _pyperclip
+    import pyperclip as _pyperclip  # type: ignore[import-untyped]
 
     _clipboard_available = True
 except ImportError:
-    pass
+    _pyperclip = None
 
 
 class FlexMessageJsonPrinter:
