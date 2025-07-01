@@ -9,18 +9,22 @@ A comprehensive, type-safe Python library for integrating with LINE's APIs. Buil
 ## 🚀 Features
 
 - 🚀 **Push Messages**: Send messages directly to users
-- 📱 **Multiple Message Types**: Text, images, locations, stickers, and Flex messages
+- � **Multicast Messages**: Efficiently send messages to multiple users (up to 500)
+- �📱 **Multiple Message Types**: Text, images, locations, stickers, and Flex messages
 - 🎨 **Flex Messages**: Type-safe Flex Message creation with Pydantic models
-- � **Webhook Handling**: Complete webhook integration with signature verification
+- 📡 **Webhook Handling**: Complete webhook integration with signature verification
 - 🎯 **Event Handlers**: Decorator-based event handling for messages, postbacks, follows
 - 🛡️ **Security**: LINE signature verification for webhook authenticity
-- �📋 **JSON Export**: Export Flex Messages for LINE simulator testing
+- 📋 **JSON Export**: Export Flex Messages for LINE simulator testing
 - 📋 **Clipboard Integration**: Automatic clipboard copy for testing
 - 🔒 **Type Safety**: Full Pydantic integration with comprehensive type hints
 - ⚡ **Async-First**: Built for high-performance async/await operations
 - 🛡️ **Error Handling**: Comprehensive error handling with typed exceptions
 - 🔄 **Retry Logic**: Built-in retry mechanisms with exponential backoff
 - 📊 **Rate Limiting**: Automatic rate limit handling
+- 🔇 **Silent Notifications**: Option to send messages without push notifications
+- 📊 **Analytics Integration**: Custom aggregation units for message tracking
+- 🔄 **Idempotent Requests**: Retry keys to prevent duplicate message sending
 
 ## 🛠 Installation
 
@@ -74,7 +78,61 @@ async def send_message():
 asyncio.run(send_message())
 ```
 
-### 3. Create Flex Messages
+### 3. Send Multicast Messages
+
+```python
+import asyncio
+import uuid
+from line_api import LineAPIConfig, LineMessagingClient, TextMessage
+
+async def send_multicast():
+    # Load configuration
+    config = LineAPIConfig.from_env_file()
+    
+    # User IDs to send to (get these from webhook events)
+    user_ids = [
+        "U1234567890abcdef1234567890abcdef",  # User ID 1
+        "U0987654321fedcba0987654321fedcba",  # User ID 2
+        "Uabcdef1234567890abcdef1234567890",  # User ID 3
+    ]
+    
+    # Create messages (up to 5 messages)
+    messages = [
+        TextMessage.create("🎉 Hello everyone!"),
+        TextMessage.create("This message was sent to multiple users simultaneously."),
+    ]
+    
+    async with LineMessagingClient(config) as client:
+        # Basic multicast
+        success = await client.multicast_message(
+            user_ids=user_ids,
+            messages=messages,
+        )
+        
+        if success:
+            print(f"✅ Multicast sent to {len(user_ids)} users!")
+        
+        # Advanced multicast with options
+        success = await client.multicast_message(
+            user_ids=user_ids,
+            messages=[TextMessage.create("📊 Campaign message")],
+            notification_disabled=False,  # Users get push notifications
+            custom_aggregation_units=["summer_campaign_2024"],  # For analytics
+            retry_key=str(uuid.uuid4()),  # For request idempotency
+        )
+        
+        # Silent multicast (no push notifications)
+        success = await client.multicast_message(
+            user_ids=user_ids,
+            messages=[TextMessage.create("🔇 Silent update")],
+            notification_disabled=True,  # No push notifications
+        )
+
+# Run the example
+asyncio.run(send_multicast())
+```
+
+### 4. Create Flex Messages
 
 ```python
 from line_api import (
@@ -126,7 +184,7 @@ print_flex_json(message, "Welcome Message")
 # Paste it into https://developers.line.biz/flex-simulator/
 ```
 
-### 4. Handle LINE Webhooks
+### 5. Handle LINE Webhooks
 
 ```python
 from fastapi import FastAPI, Request
@@ -211,6 +269,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - ✅ Core configuration management with Pydantic
 - ✅ LINE Messaging API integration
 - ✅ Text message support with type safety
+- ✅ **Multicast Messages**: Complete multicast messaging with advanced options
+  - ✅ Send to up to 500 users simultaneously
+  - ✅ Silent notifications support
+  - ✅ Custom aggregation units for analytics
+  - ✅ Retry keys for idempotent requests
 - ✅ **Flex Messages**: Complete type-safe Flex Message creation
 - ✅ **JSON Export**: Export to LINE Flex Message Simulator
 - ✅ **Clipboard Integration**: Automatic copy-to-clipboard functionality

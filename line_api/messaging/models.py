@@ -186,6 +186,15 @@ class PushMessageRequest(BaseModel):
         max_length=5,
         description="List of message objects (max 5)",
     )
+    notificationDisabled: bool | None = Field(
+        default=None,
+        description="Whether to disable push notifications",
+    )
+    customAggregationUnits: list[str] | None = Field(
+        default=None,
+        max_length=1,
+        description="Custom aggregation unit names (max 1)",
+    )
 
     model_config = {"extra": "forbid"}
 
@@ -203,6 +212,15 @@ class MulticastMessageRequest(BaseModel):
         max_length=5,
         description="List of message objects (max 5)",
     )
+    notificationDisabled: bool | None = Field(
+        default=None,
+        description="Whether to disable push notifications",
+    )
+    customAggregationUnits: list[str] | None = Field(
+        default=None,
+        max_length=1,
+        description="Custom aggregation unit names (max 1)",
+    )
 
     model_config = {"extra": "forbid"}
 
@@ -211,11 +229,15 @@ class ReplyMessageRequest(BaseModel):
     """Request model for reply message API."""
 
     # Using camelCase to match LINE API specification
-    replyToken: str = Field(..., description="Reply token from webhook event")  # noqa: N815
+    replyToken: str = Field(..., description="Reply token from webhook event")
     messages: list[AnyMessage] = Field(
         ...,
         max_length=5,
         description="List of message objects (max 5)",
+    )
+    notificationDisabled: bool | None = Field(
+        default=None,
+        description="Whether to disable push notifications",
     )
 
     model_config = {"extra": "forbid"}

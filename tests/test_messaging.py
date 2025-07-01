@@ -97,3 +97,133 @@ async def test_client_context_manager(config: LineAPIConfig) -> None:
         assert client is not None
         # Client should be properly initialized
         assert client.config == config
+
+
+@pytest.mark.asyncio
+async def test_multicast_message_success(client: LineMessagingClient) -> None:
+    """Test successful multicast message."""
+    user_ids = ["user1", "user2", "user3"]
+    messages = [TextMessage.create("Hello, everyone!")]
+
+    with patch.object(client, "_make_request", new=AsyncMock()) as mock_request:
+        mock_request.return_value = {}
+
+        result = await client.multicast_message(user_ids, messages)
+
+        assert result is True
+        mock_request.assert_called_once()
+
+        # Verify the request data
+        call_args = mock_request.call_args
+        assert call_args[0] == ("POST", "message/multicast")
+        request_data = call_args[1]["data"]
+        assert request_data["to"] == user_ids
+        assert len(request_data["messages"]) == 1
+        assert request_data["messages"][0]["type"] == "text"
+        assert request_data["messages"][0]["text"] == "Hello, everyone!"
+
+
+@pytest.mark.asyncio
+async def test_multicast_message_with_options(client: LineMessagingClient) -> None:
+    """Test multicast message with advanced options."""
+    user_ids = ["user1", "user2"]
+    messages = [TextMessage.create("Campaign message")]
+
+    with patch.object(client, "_make_request", new=AsyncMock()) as mock_request:
+        mock_request.return_value = {}
+
+        result = await client.multicast_message(
+            user_ids=user_ids,
+            messages=messages,
+            notification_disabled=True,
+            custom_aggregation_units=["summer_campaign"],
+            retry_key="test-retry-key",
+        )
+
+        assert result is True
+        mock_request.assert_called_once()
+
+        # Verify the request data
+        call_args = mock_request.call_args
+        assert call_args[0] == ("POST", "message/multicast")
+        assert call_args[1]["retry_key"] == "test-retry-key"
+
+        request_data = call_args[1]["data"]
+        assert request_data["to"] == user_ids
+        assert request_data["notificationDisabled"] is True
+        assert request_data["customAggregationUnits"] == ["summer_campaign"]
+
+
+@pytest.mark.asyncio
+async def test_multicast_message_enhanced_validation(
+    client: LineMessagingClient,
+) -> None:
+    """Test enhanced multicast message validation."""
+    user_ids = ["user1", "user2"]
+    messages = [TextMessage.create("Test")]
+
+    # Test too many custom aggregation units
+    with pytest.raises(
+        LineMessageError, match="Maximum 1 custom aggregation unit allowed"
+    ):
+        await client.multicast_message(
+            user_ids=user_ids,
+            messages=messages,
+            custom_aggregation_units=["unit1", "unit2"],
+        )
+
+
+@pytest.mark.asyncio
+async def test_push_message_with_options(client: LineMessagingClient) -> None:
+    """Test push message with advanced options."""
+    messages = [TextMessage.create("Push notification test")]
+
+    with patch.object(client, "_make_request", new=AsyncMock()) as mock_request:
+        mock_request.return_value = {}
+
+        result = await client.push_message(
+            user_id="user123",
+            messages=messages,
+            notification_disabled=False,
+            custom_aggregation_units=["push_test"],
+            retry_key="push-retry-key",
+        )
+
+        assert result is True
+        mock_request.assert_called_once()
+
+        # Verify the request data
+        call_args = mock_request.call_args
+        assert call_args[0] == ("POST", "message/push")
+        assert call_args[1]["retry_key"] == "push-retry-key"
+
+        request_data = call_args[1]["data"]
+        assert request_data["to"] == "user123"
+        assert request_data["notificationDisabled"] is False
+        assert request_data["customAggregationUnits"] == ["push_test"]
+
+
+@pytest.mark.asyncio
+async def test_reply_message_with_options(client: LineMessagingClient) -> None:
+    """Test reply message with notification options."""
+    messages = [TextMessage.create("Reply test")]
+
+    with patch.object(client, "_make_request", new=AsyncMock()) as mock_request:
+        mock_request.return_value = {}
+
+        result = await client.reply_message(
+            reply_token="reply_token_123",
+            messages=messages,
+            notification_disabled=True,
+        )
+
+        assert result is True
+        mock_request.assert_called_once()
+
+        # Verify the request data
+        call_args = mock_request.call_args
+        assert call_args[0] == ("POST", "message/reply")
+
+        request_data = call_args[1]["data"]
+        assert request_data["replyToken"] == "reply_token_123"
+        assert request_data["notificationDisabled"] is True
