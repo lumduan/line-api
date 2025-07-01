@@ -3,26 +3,45 @@ LINE Flex Messages module.
 
 This module provides type-safe Pydantic models for creating LINE Flex Messages
 and utilities for testing and validation.
+
+Updated with comprehensive components and properties from the latest LINE API docs.
 """
 
-from .models import (
+from .models import (  # Enums for type safety; Components; Actions
+    FlexAdjustMode,
+    FlexAlignItems,
     FlexAlignment,
     FlexBox,
     FlexBubble,
+    FlexBubbleSize,
     FlexButton,
+    FlexButtonHeight,
     FlexButtonStyle,
     FlexCarousel,
     FlexComponent,
+    FlexDirection,
+    FlexFiller,
+    FlexGravity,
+    FlexIcon,
     FlexImage,
+    FlexImageAspectMode,
+    FlexJustifyContent,
     FlexLayout,
+    FlexLinearGradient,
     FlexMessage,
     FlexMessageAction,
     FlexMessageType,
     FlexPosition,
     FlexPostbackAction,
     FlexSeparator,
+    FlexSize,
+    FlexSpacing,
+    FlexSpan,
     FlexText,
+    FlexTextDecoration,
+    FlexTextWeight,
     FlexUriAction,
+    FlexVideo,
 )
 from .utils import (
     FlexMessageJsonPrinter,
@@ -32,23 +51,42 @@ from .utils import (
 )
 
 __all__ = [
-    # Models
+    # Enums
+    "FlexAdjustMode",
+    "FlexAlignItems",
     "FlexAlignment",
+    "FlexBubbleSize",
+    "FlexButtonHeight",
+    "FlexButtonStyle",
+    "FlexDirection",
+    "FlexGravity",
+    "FlexImageAspectMode",
+    "FlexJustifyContent",
+    "FlexLayout",
+    "FlexMessageType",
+    "FlexPosition",
+    "FlexSize",
+    "FlexSpacing",
+    "FlexTextDecoration",
+    "FlexTextWeight",
+    # Components
     "FlexBox",
     "FlexBubble",
     "FlexButton",
-    "FlexButtonStyle",
     "FlexCarousel",
     "FlexComponent",
+    "FlexFiller",
+    "FlexIcon",
     "FlexImage",
-    "FlexLayout",
+    "FlexLinearGradient",
     "FlexMessage",
-    "FlexMessageAction",
-    "FlexMessageType",
-    "FlexPosition",
-    "FlexPostbackAction",
     "FlexSeparator",
+    "FlexSpan",
     "FlexText",
+    "FlexVideo",
+    # Actions
+    "FlexMessageAction",
+    "FlexPostbackAction",
     "FlexUriAction",
     # Utils
     "FlexMessageJsonPrinter",
