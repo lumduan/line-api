@@ -5,6 +5,68 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-07-02
+
+### Added
+
+- **🎉 FlexMessage Auto-Conversion Feature**
+  - **Automatic Pydantic Model Conversion**: `FlexMessage.create()` now automatically converts Pydantic models to dictionaries
+  - **Enhanced Developer Experience**: No more manual `.model_dump()` calls required when creating Flex messages
+  - **Backward Compatible**: Still supports dictionary inputs for advanced use cases
+  - **Type Safety**: Enhanced type signature `contents: dict[str, Any] | BaseModel` with full mypy support
+  - **Smart Detection**: Uses `isinstance(contents, BaseModel)` to detect and convert Pydantic models automatically
+  - **Proper Serialization**: Automatically applies `exclude_none=True, mode="json"` for LINE API compatibility
+
+- **📚 Enhanced Examples and Documentation**
+  - **New Auto-Conversion Example**: `flex_message_auto_conversion_example.py` demonstrating the new feature
+  - **Comprehensive Documentation**: Added `FLEXMESSAGE_AUTO_CONVERSION.md` with detailed usage guide
+  - **Before/After Comparisons**: Clear examples showing the improvement in code clarity
+  - **Migration Guide**: Instructions for updating existing code (optional - no breaking changes)
+
+### Enhanced
+
+- **FlexMessage.create() Method**: Now accepts both `dict[str, Any]` and `BaseModel` for contents parameter
+- **Multicast Message Examples**: Updated to showcase cleaner auto-conversion syntax
+- **Type Annotations**: Modern `|` union syntax instead of deprecated `Union[]`
+- **API Consistency**: All Flex message creation now uses the same intuitive pattern
+
+### Technical Improvements
+
+- **Zero Breaking Changes**: All existing code continues to work without modification
+- **Performance Optimized**: Minimal overhead with single `isinstance()` check
+- **Full Test Coverage**: All functionality tested and validated
+- **Production Ready**: Successfully tested with real LINE API endpoints
+
+### Code Examples
+
+#### Before (v1.2.1 and earlier)
+```python
+# Manual serialization required
+bubble = FlexBubble.create(body=body)
+flex_message = FlexMessage.create(
+    alt_text="Hello",
+    contents=bubble.model_dump(exclude_none=True, mode="json")  # Manual!
+)
+```
+
+#### After (v1.3.0+)
+```python
+# Auto-conversion - much cleaner!
+bubble = FlexBubble.create(body=body)
+flex_message = FlexMessage.create(
+    alt_text="Hello",
+    contents=bubble  # Auto-converted! 🎉
+)
+```
+
+### Benefits
+
+- **✨ Cleaner Code**: Eliminates boilerplate `.model_dump()` calls
+- **🚫 Fewer Errors**: No more serialization parameter mistakes
+- **🛡️ Type Safety**: Full type hints with union types
+- **📱 Better UX**: More intuitive and consistent API
+- **🔧 Less Boilerplate**: Reduced code complexity for developers
+
 ## [1.2.1] - 2025-07-02
 
 ### Fixed
@@ -18,7 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **📚 Documentation Consistency**
   - **properties-reference.md**: Fixed URI action import and usage examples
-  - **size-spacing.md**: Corrected button action examples 
+  - **size-spacing.md**: Corrected button action examples
   - **video.md**: Fixed all video action examples (5 instances)
   - **components-reference.md**: Updated component examples with correct imports
   - **best-practices.md**: Fixed all action usage examples (4 instances) and added missing imports

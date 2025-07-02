@@ -21,12 +21,12 @@ from line_api import (
     FlexBox,
     FlexBubble,
     FlexLayout,
-    FlexMessage,
     FlexText,
     LineAPIConfig,
     LineMessagingClient,
     TextMessage,
 )
+from line_api.flex_messages import FlexTextWeight
 from line_api.messaging import LocationMessage, StickerMessage
 
 
@@ -152,7 +152,7 @@ async def send_multicast_flex_message(user_ids: Optional[list[str]] = None) -> N
     # Create a Flex message
     title = FlexText.create(
         text="🛍️ Flash Sale Alert!",
-        weight="bold",
+        weight=FlexTextWeight.BOLD,
         size="xl",
         color="#FF6B6B",
     )
@@ -165,7 +165,7 @@ async def send_multicast_flex_message(user_ids: Optional[list[str]] = None) -> N
 
     cta = FlexText.create(
         text="Shop Now →",
-        weight="bold",
+        weight=FlexTextWeight.BOLD,
         color="#4ECDC4",
     )
 
@@ -173,13 +173,17 @@ async def send_multicast_flex_message(user_ids: Optional[list[str]] = None) -> N
         layout=FlexLayout.VERTICAL,
         contents=[title, description, cta],
         spacing="md",
-        padding_all="20px",
     )
 
     bubble = FlexBubble.create(body=body)
-    flex_message = FlexMessage.create(
+
+    # Import the messaging FlexMessage to create a proper message for the API
+    from line_api.messaging import FlexMessage as MessagingFlexMessage
+
+    # ✨ NEW: Auto-conversion! No need for .model_dump() anymore!
+    flex_message = MessagingFlexMessage.create(
         alt_text="Flash Sale Alert - 50% off all items!",
-        contents=bubble,
+        contents=bubble,  # Direct Pydantic model - auto-converted!
     )
 
     try:
