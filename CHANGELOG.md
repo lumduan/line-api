@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2025-07-02
+
+### Fixed
+
+- **🚨 CRITICAL: FlexMessage Serialization Bug Fix**
+  - **Fixed LINE API 400 Errors**: Resolved issue where snake_case field names were being sent to LINE API instead of required camelCase
+  - **Root Cause**: `FlexMessage.model_dump()` method was not consistently using `by_alias=True` parameter
+  - **Impact**: Eliminated 400 "unknown field" errors for properties like `aspect_ratio`, `background_color`, `line_spacing`, etc.
+  - **Solution**: Updated `FlexMessage.model_dump()` to always use `by_alias=True` for both main model and nested models
+  - **Verification**: All 27 snake_case properties now properly serialize to camelCase format
+
+- **🔧 Technical Improvements**
+  - **Enhanced Serialization**: Added safe kwargs handling to prevent duplicate parameter errors
+  - **Nested Model Support**: Ensured FlexBubble and FlexCarousel also use proper field name conversion
+  - **Comprehensive Testing**: Verified all field mappings with automated serialization tests
+  - **API Compliance**: 100% compliance with LINE API field naming requirements
+
+### Verified Field Mappings
+
+The following snake_case properties are now guaranteed to serialize correctly:
+
+- `display_text` → `displayText`
+- `alt_uri_desktop` → `altUriDesktop`
+- `line_spacing` → `lineSpacing`
+- `max_lines` → `maxLines`
+- `adjust_mode` → `adjustMode`
+- `offset_top/bottom/start/end` → `offsetTop/Bottom/Start/End`
+- `aspect_ratio` → `aspectRatio`
+- `aspect_mode` → `aspectMode`
+- `background_color` → `backgroundColor`
+- `preview_url` → `previewUrl`
+- `alt_content` → `altContent`
+- `start_color/end_color/center_color` → `startColor/endColor/centerColor`
+- `center_position` → `centerPosition`
+- `max_width/max_height` → `maxWidth/maxHeight`
+- `padding_all/top/bottom/start/end` → `paddingAll/Top/Bottom/Start/End`
+- `border_color/border_width` → `borderColor/borderWidth`
+
+### Impact
+
+- **Before**: FlexMessages failed with LINE API 400 errors like "unknown field: aspect_ratio"
+- **After**: All FlexMessages serialize correctly with proper camelCase field names
+- **Result**: Production LINE bots can now send complex FlexMessages without serialization errors
+
 ## [2.0.0] - 2025-07-02
 
 ### Added

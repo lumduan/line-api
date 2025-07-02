@@ -235,7 +235,7 @@ LINE_API_MAX_RETRIES=3
 ## Recent Achievements
 
 ### 🎉 FlexMessage Unification (July 2025) - v2.0.0
-- ✅ **MAJOR IMPROVEMENT**: Unified FlexMessage classes into a single, powerful class  
+- ✅ **MAJOR IMPROVEMENT**: Unified FlexMessage classes into a single, powerful class
 - ✅ **Zero Confusion**: Eliminated duplicate FlexMessage - users work with only ONE class
 - ✅ **Seamless Integration**: Same FlexMessage works for building AND sending messages
 - ✅ **Auto-Serialization**: Built-in conversion for LINE API compatibility

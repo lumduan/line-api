@@ -86,11 +86,11 @@ class FlexMessage(BaseModel):
     def model_dump(self, **kwargs) -> dict[str, Any]:
         """Export with proper field name conversion for LINE API."""
         data = super().model_dump(**kwargs)
-        
+
         # Ensure contents is properly serialized if it's a Pydantic model
         if isinstance(self.contents, (FlexBubble, FlexCarousel)):
             data['contents'] = self.contents.model_dump(exclude_none=True, mode="json")
-        
+
         return data
 ```
 
@@ -104,7 +104,7 @@ The duplicate `FlexMessage` class from `line_api.messaging.models` has been remo
 # line_api/messaging/__init__.py
 from line_api.flex_messages import FlexMessage  # Import unified class
 
-# line_api/__init__.py  
+# line_api/__init__.py
 from .flex_messages import FlexMessage  # Available from main package
 ```
 
@@ -148,7 +148,7 @@ await client.push_message(user_id, [message])
 # Old
 from line_api.messaging import FlexMessage
 
-# New  
+# New
 from line_api import FlexMessage
 ```
 

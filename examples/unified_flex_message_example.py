@@ -128,7 +128,7 @@ async def demonstrate_before_after() -> None:
     """Show the difference between old confusing approach and new unified approach."""
     print("\n📊 Before vs After Comparison")
     print("=" * 50)
-    
+
     print("\n❌ OLD CONFUSING APPROACH:")
     print("```python")
     print("# Users had to import TWO different FlexMessage classes")

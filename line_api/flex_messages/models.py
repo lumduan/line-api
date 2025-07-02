@@ -901,11 +901,21 @@ class FlexMessage(BaseModel):
         This method ensures that nested Pydantic models are properly converted
         to dictionaries when sending to the LINE API.
         """
-        # Get base model dump
-        data = super().model_dump(exclude_none=exclude_none, mode=mode, **kwargs)
+        # Get base model dump with by_alias=True to ensure proper field name conversion
+        kwargs.pop("by_alias", None)  # Remove by_alias from kwargs to avoid duplicate
+        data = super().model_dump(
+            exclude_none=exclude_none,
+            mode=mode,
+            by_alias=True,
+            **kwargs,
+        )
 
         # Ensure contents is properly serialized if it's a Pydantic model
         if isinstance(self.contents, (FlexBubble, FlexCarousel)):
-            data["contents"] = self.contents.model_dump(exclude_none=True, mode="json")
+            data["contents"] = self.contents.model_dump(
+                exclude_none=True,
+                mode="json",
+                by_alias=True,
+            )
 
         return data

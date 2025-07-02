@@ -159,7 +159,7 @@ async def send_multicast_flex_message(user_ids: Optional[list[str]] = None) -> N
     )
 
     description = FlexText.create(
-        text="60% off all items for the next 24 hours! Don't miss out on this amazing deal.",
+        text="70% off all items for the next 24 hours! Don't miss out on this amazing deal.",
         wrap=True,
         color="#555555",
     )
