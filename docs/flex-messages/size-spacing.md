@@ -147,18 +147,17 @@ Button heights control the vertical size of `FlexButton` components.
 | `md` | ~40px | Standard buttons (default) |
 
 ```python
-from line_api.flex_messages import FlexButton, FlexButtonHeight
-from line_api.actions import URIAction
+from line_api.flex_messages import FlexButton, FlexButtonHeight, FlexUriAction
 
 # Small button
 small_button = FlexButton.create(
-    action=URIAction.create(uri="https://example.com", label="Small"),
+    action=FlexUriAction(uri="https://example.com", label="Small"),
     height=FlexButtonHeight.SMALL
 )
 
 # Medium button (default)
 medium_button = FlexButton.create(
-    action=URIAction.create(uri="https://example.com", label="Medium"),
+    action=FlexUriAction(uri="https://example.com", label="Medium"),
     height=FlexButtonHeight.MEDIUM
 )
 ```

@@ -14,6 +14,11 @@ Comprehensive guide to building maintainable, performant, and user-friendly Flex
 
 **Content Organization**:
 ```python
+from line_api.flex_messages import (
+    FlexBubble, FlexBox, FlexLayout, FlexText, FlexWeight, FlexTextSize,
+    FlexSeparator, FlexButton, FlexButtonStyle, FlexUriAction
+)
+
 # ✅ Good: Clear hierarchy and organization
 bubble = FlexBubble.create(
     body=FlexBox.create(
@@ -32,7 +37,7 @@ bubble = FlexBubble.create(
 
             # Clear call-to-action
             FlexButton.create(
-                action=URIAction.create(uri="https://apple.com", label="Learn More"),
+                action=FlexUriAction(uri="https://apple.com", label="Learn More"),
                 style=FlexButtonStyle.PRIMARY,
                 margin="lg"
             )
@@ -46,6 +51,12 @@ bubble = FlexBubble.create(
 Reveal information progressively to avoid overwhelming users:
 
 ```python
+from typing import Dict
+from line_api.flex_messages import (
+    FlexBubble, FlexImage, FlexBox, FlexLayout, FlexText, FlexWeight,
+    FlexTextSize, FlexButton, FlexButtonStyle, FlexUriAction
+)
+
 # ✅ Good: Progressive information disclosure
 def create_product_overview(product: Dict) -> FlexBubble:
     return FlexBubble.create(
@@ -71,12 +82,12 @@ def create_product_overview(product: Dict) -> FlexBubble:
             spacing="sm",
             contents=[
                 FlexButton.create(
-                    action=URIAction.create(uri=f"/product/{product['id']}", label="Details"),
+                    action=FlexUriAction(uri=f"/product/{product['id']}", label="Details"),
                     style=FlexButtonStyle.SECONDARY,
                     flex=1
                 ),
                 FlexButton.create(
-                    action=URIAction.create(uri=f"/buy/{product['id']}", label="Buy Now"),
+                    action=FlexUriAction(uri=f"/buy/{product['id']}", label="Buy Now"),
                     style=FlexButtonStyle.PRIMARY,
                     flex=1
                 )
@@ -232,6 +243,8 @@ def create_article_content() -> List[FlexComponent]:
 
 **Image Optimization**:
 ```python
+from line_api.flex_messages import FlexImage, FlexImageAspectMode, FlexUriAction
+
 # ✅ Good: Optimized image usage
 def create_product_image(product_url: str) -> FlexImage:
     return FlexImage.create(
@@ -240,9 +253,9 @@ def create_product_image(product_url: str) -> FlexImage:
         aspectRatio="16:9",           # Consistent aspect ratio
         aspectMode=FlexImageAspectMode.COVER,  # Prevent distortion
         backgroundColor="#f0f0f0",    # Fallback background
-        action=URIAction.create(      # Make images interactive
+        action=FlexUriAction(         # Make images interactive
             uri=f"{product_url}?view=fullsize",
-            label="View Full Size"
+            label="View Full Size",
         )
     )
 ```
@@ -258,6 +271,10 @@ def create_product_image(product_url: str) -> FlexImage:
 
 **Action Hierarchy**:
 ```python
+from line_api.flex_messages import (
+    FlexBox, FlexLayout, FlexButton, FlexButtonStyle, FlexButtonHeight, FlexUriAction
+)
+
 def create_action_buttons() -> FlexBox:
     return FlexBox.create(
         layout=FlexLayout.VERTICAL,
@@ -265,21 +282,21 @@ def create_action_buttons() -> FlexBox:
         contents=[
             # Primary action - most important
             FlexButton.create(
-                action=URIAction.create(uri="/purchase", label="Buy Now"),
+                action=FlexUriAction(uri="/purchase", label="Buy Now"),
                 style=FlexButtonStyle.PRIMARY,
                 height=FlexButtonHeight.MEDIUM
             ),
 
             # Secondary action - supporting
             FlexButton.create(
-                action=URIAction.create(uri="/details", label="Learn More"),
+                action=FlexUriAction(uri="/details", label="Learn More"),
                 style=FlexButtonStyle.SECONDARY,
                 height=FlexButtonHeight.MEDIUM
             ),
 
             # Tertiary action - least important
             FlexButton.create(
-                action=URIAction.create(uri="/wishlist", label="Add to Wishlist"),
+                action=FlexUriAction(uri="/wishlist", label="Add to Wishlist"),
                 style=FlexButtonStyle.LINK,
                 height=FlexButtonHeight.SMALL
             )

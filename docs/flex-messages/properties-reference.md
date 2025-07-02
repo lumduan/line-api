@@ -381,9 +381,9 @@ box = FlexBox.create(cornerRadius="50%")   # Circular
 For buttons, images, and videos:
 
 ```python
-from line_api.actions import URIAction
+from line_api.flex_messages import FlexUriAction
 
-action = URIAction.create(
+action = FlexUriAction(
     uri="https://example.com",
     label="Visit Website"
 )

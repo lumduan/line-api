@@ -210,9 +210,9 @@ Image component with various display options.
 
 ```python
 from line_api.flex_messages import (
-    FlexImage, FlexImageSize, FlexImageAspectMode, FlexAlignment, FlexGravity
+    FlexImage, FlexImageSize, FlexImageAspectMode, FlexAlignment, FlexGravity,
+    FlexUriAction
 )
-from line_api.actions import URIAction
 
 image = FlexImage.create(
     url="https://example.com/image.jpg",
@@ -225,7 +225,7 @@ image = FlexImage.create(
     aspectRatio="16:9",
     aspectMode=FlexImageAspectMode.COVER,
     backgroundColor="#f0f0f0",
-    action=URIAction.create(uri="https://example.com", label="View")
+    action=FlexUriAction(uri="https://example.com", label="View")
 )
 ```
 
@@ -247,15 +247,14 @@ image = FlexImage.create(
 Video component for hero blocks.
 
 ```python
-from line_api.flex_messages import FlexVideo
-from line_api.actions import URIAction
+from line_api.flex_messages import FlexVideo, FlexUriAction
 
 video = FlexVideo.create(
     url="https://example.com/video.mp4",
     previewUrl="https://example.com/preview.jpg",
     altContent=fallback_image,
     aspectRatio="16:9",
-    action=URIAction.create(uri="https://example.com", label="Learn More")
+    action=FlexUriAction(uri="https://example.com", label="Learn More")
 )
 ```
 
@@ -298,12 +297,11 @@ Interactive button component.
 
 ```python
 from line_api.flex_messages import (
-    FlexButton, FlexButtonStyle, FlexButtonHeight, FlexGravity
+    FlexButton, FlexButtonStyle, FlexButtonHeight, FlexGravity, FlexUriAction
 )
-from line_api.actions import URIAction
 
 button = FlexButton.create(
-    action=URIAction.create(uri="https://example.com", label="Click Me"),
+    action=FlexUriAction(uri="https://example.com", label="Click Me"),
     flex=1,
     margin="md",
     position="relative",

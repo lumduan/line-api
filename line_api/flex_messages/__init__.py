@@ -50,12 +50,15 @@ from .utils import (
     validate_flex_json,
 )
 
+# Aliases for better ergonomics and backward compatibility
+URIAction = FlexUriAction
+PostbackAction = FlexPostbackAction
+MessageAction = FlexMessageAction
+
 __all__ = [
-    # Enums
     "FlexAdjustMode",
     "FlexAlignItems",
     "FlexAlignment",
-    # Components
     "FlexBox",
     "FlexBubble",
     "FlexBubbleSize",
@@ -74,9 +77,7 @@ __all__ = [
     "FlexLayout",
     "FlexLinearGradient",
     "FlexMessage",
-    # Actions
     "FlexMessageAction",
-    # Utils
     "FlexMessageJsonPrinter",
     "FlexMessageType",
     "FlexPosition",
@@ -90,6 +91,9 @@ __all__ = [
     "FlexTextWeight",
     "FlexUriAction",
     "FlexVideo",
+    "MessageAction",
+    "PostbackAction",
+    "URIAction",
     "export_flex_json",
     "print_flex_json",
     "validate_flex_json",

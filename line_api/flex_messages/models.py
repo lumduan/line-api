@@ -174,6 +174,31 @@ class FlexPostbackAction(FlexAction):
     data: str
     display_text: Optional[str] = Field(default=None, alias="displayText")
 
+    @classmethod
+    def create(
+        cls,
+        data: str,
+        label: str,
+        display_text: Optional[str] = None,
+    ) -> "FlexPostbackAction":
+        """
+        Create a postback action.
+
+        Args:
+            data: The data to send in the postback
+            label: The label for the action (required for buttons)
+            display_text: Text to display in the chat when action is performed
+
+        Returns:
+            FlexPostbackAction instance
+
+        """
+        return cls(
+            data=data,
+            label=label,
+            displayText=display_text,
+        )
+
 
 class FlexMessageAction(FlexAction):
     """Message action."""
@@ -181,6 +206,28 @@ class FlexMessageAction(FlexAction):
     type: str = Field(default="message", frozen=True)
     label: str  # Required for button actions
     text: str
+
+    @classmethod
+    def create(
+        cls,
+        text: str,
+        label: str,
+    ) -> "FlexMessageAction":
+        """
+        Create a message action.
+
+        Args:
+            text: The text message to send
+            label: The label for the action (required for buttons)
+
+        Returns:
+            FlexMessageAction instance
+
+        """
+        return cls(
+            text=text,
+            label=label,
+        )
 
 
 class FlexUriAction(FlexAction):
@@ -190,6 +237,31 @@ class FlexUriAction(FlexAction):
     label: str  # Required for button actions
     uri: str
     alt_uri_desktop: Optional[str] = Field(default=None, alias="altUriDesktop")
+
+    @classmethod
+    def create(
+        cls,
+        uri: str,
+        label: str,
+        alt_uri_desktop: Optional[str] = None,
+    ) -> "FlexUriAction":
+        """
+        Create a URI action.
+
+        Args:
+            uri: The URI to open when the action is performed
+            label: The label for the action (required for buttons)
+            alt_uri_desktop: Alternative URI for desktop users
+
+        Returns:
+            FlexUriAction instance
+
+        """
+        return cls(
+            uri=uri,
+            label=label,
+            altUriDesktop=alt_uri_desktop,
+        )
 
 
 class FlexComponent(BaseModel):

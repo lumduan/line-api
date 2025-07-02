@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2025-07-02
+
+### Fixed
+
+- **🔧 URI Actions Documentation Fix**
+  - **Fixed import statements**: Corrected all documentation to use `from line_api.flex_messages import FlexUriAction`
+  - **Removed incorrect imports**: Eliminated non-existent `from line_api.actions import URIAction` references
+  - **Added convenience aliases**: Added `URIAction`, `PostbackAction`, `MessageAction` aliases for better ergonomics
+  - **Enhanced factory methods**: Added `.create()` class methods for all action types for consistency
+  - **Updated examples**: Fixed all documentation examples to use correct import patterns
+
+- **📚 Documentation Consistency**
+  - **properties-reference.md**: Fixed URI action import and usage examples
+  - **size-spacing.md**: Corrected button action examples 
+  - **video.md**: Fixed all video action examples (5 instances)
+  - **components-reference.md**: Updated component examples with correct imports
+  - **best-practices.md**: Fixed all action usage examples (4 instances) and added missing imports
+
+- **🧪 Enhanced Testing**
+  - **Comprehensive test suite**: Added `test_uri_actions.py` with 11 test cases
+  - **Import verification**: Tests for both `FlexUriAction` and `URIAction` alias imports
+  - **Factory method testing**: Validates both direct constructor and `.create()` method usage
+  - **Serialization testing**: Ensures proper JSON output for LINE API compliance
+
+### Technical Improvements
+
+- **Better Developer Experience**: Users can now use either `FlexUriAction` or `URIAction` alias
+- **Consistent API**: All action types now have `.create()` factory methods
+- **Type Safety**: Maintained full type safety across all changes
+- **Backward Compatibility**: No breaking changes, only additions and fixes
+
 ## [1.2.0] - 2025-07-01
 
 ### Added

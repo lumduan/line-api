@@ -52,14 +52,14 @@ video = FlexVideo.create(
 ### Optional Properties
 
 ```python
-from line_api.actions import URIAction
+from line_api.flex_messages import FlexUriAction
 
 video = FlexVideo.create(
     url="https://example.com/video.mp4",
     previewUrl="https://example.com/preview.jpg",
     altContent=fallback_image,
     aspectRatio="16:9",
-    action=URIAction.create(                       # Custom action
+    action=FlexUriAction(                          # Custom action
         uri="https://example.com/more-info",
         label="More Information"
     )
@@ -166,16 +166,16 @@ Add interactive elements to videos using URI actions:
 ### Action Configuration
 
 ```python
-from line_api.actions import URIAction
+from line_api.flex_messages import FlexUriAction
 
 # Web URL action
-web_action = URIAction.create(
+web_action = FlexUriAction(
     uri="https://example.com/product-page",
     label="View Product"
 )
 
 # Phone call action
-call_action = URIAction.create(
+call_action = FlexUriAction(
     uri="tel:+1234567890",
     label="Call Now"
 )
@@ -278,12 +278,11 @@ message = FlexMessage.create(
 ```python
 from line_api.flex_messages import (
     FlexMessage, FlexBubble, FlexVideo, FlexBox, FlexText, FlexButton,
-    FlexBubbleSize, FlexLayout, FlexWeight, FlexTextSize
+    FlexBubbleSize, FlexLayout, FlexWeight, FlexTextSize, FlexUriAction
 )
-from line_api.actions import URIAction
 
 # Create video with action
-video_action = URIAction.create(
+video_action = FlexUriAction(
     uri="https://example.com/product",
     label="Learn More"
 )
@@ -320,16 +319,16 @@ footer = FlexBox.create(
     spacing="sm",
     contents=[
         FlexButton.create(
-            action=URIAction.create(
+            action=FlexUriAction(
                 uri="https://example.com/buy",
-                label="Buy Now"
+                label="Buy Now",
             ),
             style="primary"
         ),
         FlexButton.create(
-            action=URIAction.create(
+            action=FlexUriAction(
                 uri="https://example.com/info",
-                label="More Info"
+                label="More Info",
             ),
             style="secondary"
         )
@@ -364,9 +363,9 @@ video = FlexVideo.create(
     previewUrl="https://example.com/restaurant_preview.jpg",
     altContent=fallback_image,
     aspectRatio="20:13",
-    action=URIAction.create(
+    action=FlexUriAction(
         uri="https://example.com/menu",
-        label="View Menu"
+        label="View Menu",
     )
 )
 
@@ -423,11 +422,11 @@ footer = FlexBox.create(
     spacing="sm",
     contents=[
         FlexButton.create(
-            action=URIAction.create(uri="tel:+81312345678", label="Call"),
+            action=FlexUriAction(uri="tel:+81312345678", label="Call"),
             style="primary"
         ),
         FlexButton.create(
-            action=URIAction.create(uri="https://example.com/reserve", label="Reserve"),
+            action=FlexUriAction(uri="https://example.com/reserve", label="Reserve"),
             style="secondary"
         )
     ]
