@@ -332,23 +332,42 @@ class FlexText(FlexComponent):
         scaling: Optional[bool] = None,
     ) -> "FlexText":
         """Create a FlexText component with the given parameters."""
-        return cls(
-            text=text,
-            contents=contents,
-            size=size,
-            weight=weight,
-            color=color,
-            align=align,
-            gravity=gravity,
-            wrap=wrap,
-            lineSpacing=line_spacing,
-            maxLines=max_lines,
-            flex=flex,
-            margin=margin,
-            action=action,
-            adjustMode=adjust_mode,
-            scaling=scaling,
-        )
+        # Only include lineSpacing if wrap is True and line_spacing is provided
+        if wrap is True and line_spacing is not None:
+            return cls(
+                text=text,
+                contents=contents,
+                size=size,
+                weight=weight,
+                color=color,
+                align=align,
+                gravity=gravity,
+                wrap=wrap,
+                lineSpacing=line_spacing,
+                maxLines=max_lines,
+                flex=flex,
+                margin=margin,
+                action=action,
+                adjustMode=adjust_mode,
+                scaling=scaling,
+            )
+        else:
+            return cls(
+                text=text,
+                contents=contents,
+                size=size,
+                weight=weight,
+                color=color,
+                align=align,
+                gravity=gravity,
+                wrap=wrap,
+                maxLines=max_lines,
+                flex=flex,
+                margin=margin,
+                action=action,
+                adjustMode=adjust_mode,
+                scaling=scaling,
+            )
 
 
 class FlexButton(FlexComponent):

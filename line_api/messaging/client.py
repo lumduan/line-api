@@ -242,7 +242,7 @@ class LineMessagingClient:
         await self._make_request(
             "POST",
             "message/push",
-            data=request.model_dump(exclude_none=True),
+            data=request.model_dump(exclude_none=True, by_alias=True),
             retry_key=retry_key,
         )
 
@@ -313,7 +313,7 @@ class LineMessagingClient:
         await self._make_request(
             "POST",
             "message/multicast",
-            data=request.model_dump(exclude_none=True),
+            data=request.model_dump(exclude_none=True, by_alias=True),
             retry_key=retry_key,
         )
 
@@ -365,7 +365,7 @@ class LineMessagingClient:
         await self._make_request(
             "POST",
             "message/reply",
-            data=request.model_dump(exclude_none=True),
+            data=request.model_dump(exclude_none=True, by_alias=True),
         )
 
         if self.config.debug:

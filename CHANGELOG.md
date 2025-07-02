@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.1] - 2025-07-02
+## [2.0.2] - 2025-07-02
 
 ### Fixed
 
@@ -21,6 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Nested Model Support**: Ensured FlexBubble and FlexCarousel also use proper field name conversion
   - **Comprehensive Testing**: Verified all field mappings with automated serialization tests
   - **API Compliance**: 100% compliance with LINE API field naming requirements
+
+- **🔧 FlexText lineSpacing Validation**
+  - **Fixed LINE API 400 Errors**: Resolved issue where `lineSpacing` was being included even when `wrap` was not `true`
+  - **LINE API Compliance**: `lineSpacing` property is now only included when both `wrap=True` and `line_spacing` is provided
+  - **Value Validation**: Added documentation that `lineSpacing` requires pixel values (e.g., `"20px"`) not keyword values (e.g., `"md"`)
+  - **Enhanced Factory Method**: `FlexText.create()` now properly excludes `lineSpacing` when conditions are not met
+  - **Backward Compatible**: Existing code continues to work, but invalid configurations are now prevented
 
 ### Verified Field Mappings
 
