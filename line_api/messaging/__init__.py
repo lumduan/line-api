@@ -1,9 +1,10 @@
 """LINE Messaging API integration."""
 
+from line_api.flex_messages import FlexMessage
+
 from .client import LineMessagingClient
 from .models import (
     AnyMessage,
-    FlexMessage,
     ImageMessage,
     LocationMessage,
     MessageType,

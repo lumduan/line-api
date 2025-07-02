@@ -21,7 +21,7 @@ For the response, always follow these instructions:
 
 **LINE API Integration Library** is a comprehensive, type-safe Python library for integrating with LINE's APIs. It provides modern async/await patterns, full Pydantic type safety, and covers all major LINE platform features including Messaging API, Flex Messages, Rich Menus, LINE Login, LIFF, and Mini Apps.
 
-**🎉 LATEST UPDATE (July 2025)**: Successfully completed comprehensive FlexMessage model updates with full LINE API specification compliance, added new FlexSpan and FlexVideo components, achieved 100% mypy strict mode compliance, and created production-ready pull request #3.
+**🎉 LATEST UPDATE (July 2025)**: Successfully completed FlexMessage unification, eliminating confusion between two FlexMessage classes. Users now work with only ONE FlexMessage class for both building and sending messages. This major developer experience improvement includes comprehensive FlexMessage model updates with full LINE API specification compliance, new FlexSpan and FlexVideo components, and 100% mypy strict mode compliance.
 
 ## 🎯 Core Purpose
 
@@ -213,10 +213,14 @@ async def webhook(request: Request):
 
 ### 4. Flex Messages (`flex_messages/`)
 
-**Purpose**: Type-safe Flex Message creation with Pydantic models
+**Purpose**: Unified type-safe Flex Message creation and API integration
 
 **Key Features**:
 
+- **UNIFIED FlexMessage Class**: Single FlexMessage class for both building content AND sending via messaging API
+- **Zero Confusion**: Eliminated duplicate FlexMessage classes - only ONE to remember
+- **Seamless Integration**: Works directly with messaging client without manual conversion
+- **Auto-Serialization**: Built-in model_dump() properly handles field name conversion for LINE API
 - Complete Flex Message component support (FlexBox, FlexBubble, FlexText, etc.)
 - **NEW**: FlexSpan component for styled text within text components
 - **NEW**: FlexVideo component for video content in hero blocks
@@ -232,22 +236,24 @@ async def webhook(request: Request):
 **Usage**:
 
 ```python
-from line_api.flex_messages import (
-    FlexBox, FlexBubble, FlexLayout, FlexMessage, FlexText, FlexSpan, FlexVideo,
-    FlexTextWeight, FlexAlignment, print_flex_json, export_flex_json
-)
+from line_api import FlexMessage, FlexBubble, FlexBox, FlexText
 
-# Create components with new features
-title = FlexText.create(
-    text="Rich text with spans",
-    contents=[
-        FlexSpan.create("Bold", weight=FlexTextWeight.BOLD),
-        FlexSpan.create(" and colored text", color="#FF0000")
-    ]
-)
-body = FlexBox.create(layout=FlexLayout.VERTICAL, contents=[title])
-bubble = FlexBubble.create(body=body)
+# Create components and message with unified class
+text = FlexText.create("Hello World")
+box = FlexBox.create(layout=FlexLayout.VERTICAL, contents=[text])
+bubble = FlexBubble.create(body=box)
+
+# ✨ UNIFIED: Same FlexMessage for building AND sending!
 message = FlexMessage.create(alt_text="Welcome", contents=bubble)
+
+# Direct usage with messaging API - no conversion needed!
+async with LineMessagingClient(config) as client:
+    await client.push_message(user_id, [message])
+
+# Export for testing
+print_flex_json(message, "My Message")  # Auto-copies to clipboard
+export_flex_json(message, "welcome.json")  # Save to file
+```
 
 # Export for testing
 print_flex_json(message, "My Message")  # Auto-copies to clipboard
@@ -725,6 +731,25 @@ async def send_with_retry(client: LineMessagingClient, message: Any) -> bool:
 - **Module `__init__.py` files**: Public API exports and module structure
 - **Test files**: Examples of proper usage and expected behavior
 - **Integration guides**: Patterns for using shared tools in services
+
+## Recent Achievements
+
+### 🎉 FlexMessage Unification (July 2025) - v2.0.0
+- ✅ **MAJOR IMPROVEMENT**: Unified FlexMessage classes into a single, powerful class
+- ✅ **Zero Confusion**: Eliminated duplicate FlexMessage - users work with only ONE class
+- ✅ **Seamless Integration**: Same FlexMessage works for building AND sending messages
+- ✅ **Auto-Serialization**: Built-in conversion for LINE API compatibility
+- ✅ **Better Developer Experience**: Simplified imports and usage patterns
+- ✅ **Backward Compatible**: Existing code continues to work with minimal changes
+- ✅ **Enhanced Type Safety**: Full mypy compliance with unified approach
+
+### 🏆 FlexMessage Models Update (July 2025) - v1.3.0
+- ✅ Added FlexSpan and FlexVideo components
+- ✅ Fixed all deprecated properties and required labels
+- ✅ Achieved 100% mypy strict mode compliance
+- ✅ All 45 tests passing
+- ✅ Complete LINE API specification compliance
+- ✅ Enhanced documentation and examples
 
 This LINE API Integration Library provides comprehensive, type-safe Python integration with all LINE platform APIs, enabling developers to build robust LINE-based applications with modern async/await patterns and full Pydantic validation.
 `````

@@ -841,17 +841,71 @@ class FlexCarousel(BaseModel):
 
 
 class FlexMessage(BaseModel):
-    """Main flex message structure."""
+    """
+    Main flex message structure.
+
+    This is the unified FlexMessage class that can be used both for building
+    Flex content and for sending via the LINE Messaging API.
+    """
 
     type: str = Field(default="flex", frozen=True)
-    alt_text: str = Field(alias="altText")
-    contents: Union[FlexBubble, FlexCarousel]
+    altText: str = Field(..., description="Alternative text for notifications")
+    contents: Union[FlexBubble, FlexCarousel, dict[str, Any]]
+
+    # For API compatibility
+    model_config = {"extra": "forbid"}
 
     @classmethod
     def create(
         cls,
         alt_text: str,
-        contents: Union[FlexBubble, FlexCarousel],
+        contents: Union[FlexBubble, FlexCarousel, dict[str, Any]],
     ) -> "FlexMessage":
-        """Create a FlexMessage with the given alt text and contents."""
+        """
+        Create a FlexMessage with the given alt text and contents.
+
+        Supports both Pydantic models and dict contents for maximum flexibility.
+        Automatically converts Pydantic models to the proper format for the LINE API.
+
+        Args:
+            alt_text: Alternative text for notifications
+            contents: Flex message content (FlexBubble, FlexCarousel, or dict)
+
+        Returns:
+            FlexMessage instance
+
+        Example:
+            >>> from line_api import FlexMessage, FlexBubble, FlexBox, FlexText
+            >>>
+            >>> # Create flex components
+            >>> text = FlexText.create("Hello")
+            >>> box = FlexBox.create(layout="vertical", contents=[text])
+            >>> bubble = FlexBubble.create(body=box)
+            >>>
+            >>> # Create message - works with both Pydantic models and dicts
+            >>> message = FlexMessage.create("Hello", bubble)
+
+        """
         return cls(altText=alt_text, contents=contents)
+
+    def model_dump(
+        self,
+        *,
+        exclude_none: bool = True,
+        mode: str = "json",
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        """
+        Export the FlexMessage to a dictionary format suitable for the LINE API.
+
+        This method ensures that nested Pydantic models are properly converted
+        to dictionaries when sending to the LINE API.
+        """
+        # Get base model dump
+        data = super().model_dump(exclude_none=exclude_none, mode=mode, **kwargs)
+
+        # Ensure contents is properly serialized if it's a Pydantic model
+        if isinstance(self.contents, (FlexBubble, FlexCarousel)):
+            data["contents"] = self.contents.model_dump(exclude_none=True, mode="json")
+
+        return data

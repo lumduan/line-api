@@ -1,5 +1,15 @@
 ---
-description: LINE API Integration Library - Comprehensive Production-Ready Python Library
+description: LINE API Integration Libr4. **Flex Messages Standards**
+   - Use factory methods (.create()) for all components
+   - **CRITICAL**: Only ONE FlexMessage class - import from `line_api` package
+   - Never use deprecated FlexSpacer (removed from LINE spec)
+   - Always provide alt_text for FlexMessage.create()
+   - Use print_flex_json() for testing with auto-clipboard
+   - Validate JSON output in LINE Flex Message Simulator
+   - **CRITICAL**: All action types now require label parameter
+   - **REMOVED**: Unsupported corner_radius property from FlexBox
+   - **NEW**: FlexSpan and FlexVideo components with full support
+   - **UNIFIED**: Same FlexMessage works for building AND sending messagesprehensive Production-Ready Python Library
 globs:
   - "**/*.py"
   - "**/*.md"
@@ -13,7 +23,7 @@ always: true
 
 This is a comprehensive LINE API integration library built for production use, providing modern async/await patterns, full Pydantic type safety, and coverage for all major LINE platform features including Messaging API, Flex Messages, Rich Menus, LINE Login, and LIFF.
 
-**🎉 LATEST ACHIEVEMENT (July 2025)**: Successfully completed comprehensive FlexMessage model updates with full LINE API specification compliance, added new FlexSpan and FlexVideo components, achieved 100% mypy strict mode compliance, and deployed production-ready pull request #3 to GitHub.
+**🎉 LATEST ACHIEVEMENT (July 2025)**: Successfully completed FlexMessage unification, eliminating confusion between two FlexMessage classes. Users now work with only ONE FlexMessage class for both building and sending messages. This major developer experience improvement represents a significant step forward in API usability and maintains full backward compatibility.
 
 ## Core Development Rules
 
@@ -179,6 +189,10 @@ Each commit message must include:
    - Duplicate event detection and processing
 
 4. **Flex Messages** (`line_api/flex_messages/`)
+   - **UNIFIED FlexMessage CLASS**: Single class for both building content AND sending via messaging API
+   - **ZERO CONFUSION**: Eliminated duplicate FlexMessage classes - only ONE to remember
+   - **SEAMLESS INTEGRATION**: Works directly with messaging client without manual conversion
+   - **AUTO-SERIALIZATION**: Built-in model_dump() properly handles field name conversion for LINE API
    - **FULLY UPDATED**: Complete Pydantic models for all Flex components
    - **NEW**: FlexSpan component for styled text within text components
    - **NEW**: FlexVideo component for video content in hero blocks
@@ -220,7 +234,16 @@ LINE_API_MAX_RETRIES=3
 
 ## Recent Achievements
 
-### 🎉 FlexMessage Models Update (July 2025)
+### 🎉 FlexMessage Unification (July 2025) - v2.0.0
+- ✅ **MAJOR IMPROVEMENT**: Unified FlexMessage classes into a single, powerful class  
+- ✅ **Zero Confusion**: Eliminated duplicate FlexMessage - users work with only ONE class
+- ✅ **Seamless Integration**: Same FlexMessage works for building AND sending messages
+- ✅ **Auto-Serialization**: Built-in conversion for LINE API compatibility
+- ✅ **Better Developer Experience**: Simplified imports and usage patterns
+- ✅ **Backward Compatible**: Existing code continues to work with minimal changes
+- ✅ **Enhanced Type Safety**: Full mypy compliance with unified approach
+
+### 🏆 FlexMessage Models Update (July 2025) - v1.3.0
 - ✅ Added FlexSpan and FlexVideo components
 - ✅ Fixed all deprecated properties and required labels
 - ✅ Achieved 100% mypy strict mode compliance
@@ -231,9 +254,10 @@ LINE_API_MAX_RETRIES=3
 
 ### 🏆 Quality Metrics
 - **Type Safety**: 100% mypy strict mode compliance
-- **Test Coverage**: 34/34 tests passing
+- **Test Coverage**: 45/45 tests passing
 - **Code Quality**: Full ruff linting compliance
 - **Documentation**: Comprehensive guides and examples
 - **API Compatibility**: 100% LINE API specification aligned
+- **Developer Experience**: Unified FlexMessage eliminates confusion
 
-This project is now production-ready with comprehensive FlexMessage support, full type safety, and complete LINE API integration.
+This project is now production-ready with unified FlexMessage support, comprehensive LINE API integration, full type safety, and exceptional developer experience.

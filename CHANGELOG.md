@@ -5,6 +5,58 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-07-02
+
+### Added
+
+- **🎯 MAJOR: FlexMessage Unification - Simplified Developer Experience**
+  - **Unified FlexMessage Class**: Combined `line_api.flex_messages.FlexMessage` and `line_api.messaging.FlexMessage` into a single, powerful class
+  - **Zero Confusion**: Users now work with only ONE FlexMessage class instead of two confusing ones
+  - **Seamless API Integration**: Unified class works perfectly for both building Flex content AND sending via messaging API
+  - **Automatic Serialization**: Built-in `model_dump()` method properly handles field name conversion for LINE API compatibility
+  - **Enhanced Type Safety**: Supports both Pydantic models and dictionaries with proper type hints
+  - **Better Developer Experience**: Eliminates the need to understand which FlexMessage to use when
+
+- **🔧 Technical Improvements**
+  - **Field Name Standardization**: Changed `alt_text` to `altText` in FlexMessage for LINE API consistency
+  - **Enhanced model_dump()**: Automatically converts nested Pydantic models to proper JSON format
+  - **Removed Duplicate Code**: Eliminated redundant FlexMessage implementation from messaging module
+  - **Updated Imports**: Messaging module now re-exports the unified FlexMessage from flex_messages
+  - **Maintained Type Safety**: Full mypy strict mode compliance across all modules
+
+- **📚 Documentation and Examples**
+  - **New Documentation**: Added comprehensive `docs/FLEXMESSAGE_UNIFICATION.md` explaining the changes and benefits
+  - **Updated Examples**: All examples now use the unified FlexMessage approach
+  - **New Unified Example**: Created `examples/unified_flex_message_example.py` demonstrating the simplified API
+  - **Migration Guide**: Clear guidance for existing users (most changes are backward compatible)
+
+### Changed
+
+- **BREAKING**: Removed duplicate `FlexMessage` class from `line_api.messaging.models`
+- **BREAKING**: Changed `FlexMessage.alt_text` field to `FlexMessage.altText` for API consistency
+- **Enhanced**: All messaging operations now use the unified FlexMessage class
+- **Updated**: Import paths simplified - all FlexMessage usage from single source
+
+### Migration Guide
+
+#### For New Users
+- Import everything from main package: `from line_api import FlexMessage, FlexBubble, ...`
+- Create messages directly: `FlexMessage.create(alt_text="Hello", contents=bubble)`
+- Send via messaging API: `await client.push_message(user_id, [message])`
+
+#### For Existing Users
+- **If using `line_api.flex_messages.FlexMessage`**: ✅ No changes needed (backward compatible)
+- **If using `line_api.messaging.FlexMessage`**: 🔄 Change import to `from line_api import FlexMessage`
+- **Field name update**: Change `alt_text` to `altText` in FlexMessage.create() calls
+
+### Benefits
+
+- **🧠 Reduced Cognitive Load**: Only one FlexMessage class to remember
+- **📝 Cleaner Code**: No confusion about which FlexMessage to import/use
+- **🔄 No Manual Conversion**: Auto-handled serialization for API calls
+- **🎯 Better IDE Support**: Clear autocomplete without duplicate classes
+- **⚡ Faster Development**: Streamlined workflow for Flex message creation
+
 ## [1.3.0] - 2025-07-02
 
 ### Added

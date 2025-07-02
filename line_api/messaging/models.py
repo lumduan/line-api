@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Union
+from typing import Union
 
 from pydantic import BaseModel, Field
+
+# Import the unified FlexMessage from flex_messages module
+from line_api.flex_messages import FlexMessage
 
 
 class MessageType(str, Enum):
@@ -140,52 +143,6 @@ class StickerMessage(BaseModel):
 
         """
         return cls(packageId=package_id, stickerId=sticker_id)
-
-
-class FlexMessage(BaseModel):
-    """LINE Flex message."""
-
-    type: str = Field(default="flex", description="Message type")
-    altText: str = Field(..., description="Alternative text for notifications")
-    contents: dict[str, Any] = Field(..., description="Flex message content")
-
-    model_config = {"extra": "forbid"}
-
-    @classmethod
-    def create(cls, alt_text: str, contents: dict[str, Any] | BaseModel) -> FlexMessage:
-        """
-        Create a Flex message.
-
-        Automatically converts Pydantic models to dictionaries for LINE API compatibility.
-        This eliminates the need for users to manually call .model_dump().
-
-        Args:
-            alt_text: Alternative text for notifications
-            contents: Flex message content (dict or Pydantic model like FlexBubble)
-
-        Returns:
-            FlexMessage instance
-
-        Example:
-            >>> from line_api.flex_messages import FlexBubble, FlexBox, FlexText
-            >>> from line_api.messaging import FlexMessage
-            >>>
-            >>> # Create flex components
-            >>> text = FlexText.create("Hello")
-            >>> box = FlexBox.create(layout="vertical", contents=[text])
-            >>> bubble = FlexBubble.create(body=box)
-            >>>
-            >>> # Auto-conversion - no need for .model_dump()!
-            >>> message = FlexMessage.create("Hello", bubble)
-
-        """
-        # Auto-convert Pydantic models to dictionaries
-        if isinstance(contents, BaseModel):
-            contents_dict = contents.model_dump(exclude_none=True, mode="json")
-        else:
-            contents_dict = contents
-
-        return cls(altText=alt_text, contents=contents_dict)
 
 
 # Type alias for all supported message types

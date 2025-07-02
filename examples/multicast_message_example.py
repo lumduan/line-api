@@ -21,6 +21,7 @@ from line_api import (
     FlexBox,
     FlexBubble,
     FlexLayout,
+    FlexMessage,
     FlexText,
     LineAPIConfig,
     LineMessagingClient,
@@ -158,7 +159,7 @@ async def send_multicast_flex_message(user_ids: Optional[list[str]] = None) -> N
     )
 
     description = FlexText.create(
-        text="50% off all items for the next 24 hours! Don't miss out on this amazing deal.",
+        text="60% off all items for the next 24 hours! Don't miss out on this amazing deal.",
         wrap=True,
         color="#555555",
     )
@@ -177,13 +178,10 @@ async def send_multicast_flex_message(user_ids: Optional[list[str]] = None) -> N
 
     bubble = FlexBubble.create(body=body)
 
-    # Import the messaging FlexMessage to create a proper message for the API
-    from line_api.messaging import FlexMessage as MessagingFlexMessage
-
-    # ✨ NEW: Auto-conversion! No need for .model_dump() anymore!
-    flex_message = MessagingFlexMessage.create(
-        alt_text="Flash Sale Alert - 50% off all items!",
-        contents=bubble,  # Direct Pydantic model - auto-converted!
+    # ✨ SIMPLIFIED: Only one FlexMessage - no confusion!
+    flex_message = FlexMessage.create(
+        alt_text="Flash Sale Alert - 60% off all items!",
+        contents=bubble,
     )
 
     try:

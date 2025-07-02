@@ -126,7 +126,7 @@ def test_enhanced_flex_message() -> None:
     # Assertions
     assert message.type == "flex"
     assert (
-        message.alt_text
+        message.altText
         == "Enhanced FlexMessage with video, icons, spans, and gradients"
     )
     assert isinstance(message.contents, FlexBubble)
